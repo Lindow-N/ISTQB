@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ISTQB — Chap.4 Mémo · Techniques de test</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bleu-fonce: #1e3a5f; --bleu: #2d6a9f; --bleu-clair: #e7f1fb;
+    --turquoise: #0d9488; --turquoise-clair: #ccfbf1;
+    --orange: #ea7317; --rouge: #dc2626; --rouge-clair: #fee2e2;
+    --vert: #16a34a; --vert-clair: #dcfce7;
+    --violet: #7c3aed; --violet-clair: #ede9fe;
+    --jaune: #ca8a04; --jaune-clair: #fef9c3;
+    --gris-fonce: #1f2937; --gris: #4b5563; --gris-clair: #f3f4f6;
+    --gris-bord: #e5e7eb; --fond: #f8fafc;
+    --ombre: 0 4px 20px rgba(30,58,95,0.08);
+  }
+
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, 'Helvetica Neue', sans-serif;
+    color: var(--gris-fonce); background: var(--fond);
+    line-height: 1.5; font-size: 15.5px;
+  }
+  html { scroll-behavior: smooth; }
+
+  /* ===== BARRE INTER-CHAPITRES ===== */
+  .chap-nav {
+    background: var(--bleu-fonce); color: #fff; padding: 9px 14px;
+    display: flex; gap: 6px; justify-content: center; flex-wrap: wrap;
+    font-size: 0.8rem; align-items: center;
+  }
+  .chap-nav a {
+    color: rgba(255,255,255,0.65); text-decoration: none; padding: 4px 10px;
+    border-radius: 20px; font-weight: 600; transition: all 0.2s; white-space: nowrap;
+  }
+  .chap-nav a:hover { background: rgba(255,255,255,0.12); color: #fff; }
+  .chap-nav a.actif { background: var(--turquoise); color: #fff; }
+  .chap-nav .sep { color: rgba(255,255,255,0.3); }
+
+  /* ===== HERO ===== */
+  .hero {
+    background: linear-gradient(135deg, #1e3a5f, #2d6a9f 55%, #0d9488);
+    color: #fff; padding: 38px 20px 42px; text-align: center;
+  }
+  .hero .badge {
+    display: inline-block; background: rgba(255,255,255,0.18);
+    padding: 5px 16px; border-radius: 50px; font-size: 0.78rem; font-weight: 600;
+    letter-spacing: 1px; margin-bottom: 12px; border: 1px solid rgba(255,255,255,0.25);
+  }
+  .hero h1 { font-size: clamp(1.6rem,4.5vw,2.4rem); font-weight: 800; margin-bottom: 6px; }
+  .hero p { font-size: 0.96rem; opacity: 0.95; max-width: 620px; margin: 0 auto; }
+  .hero .meta { margin-top: 14px; display:flex; gap:10px; justify-content:center; flex-wrap:wrap; }
+  .hero .meta span {
+    background: rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.2);
+    padding: 5px 13px; border-radius: 30px; font-size: 0.8rem; font-weight: 600;
+  }
+  .hero .k3 {
+    display:inline-block; background:#fff; color:var(--rouge); padding:5px 14px;
+    border-radius:30px; font-size:0.78rem; font-weight:800; margin-top:12px;
+  }
+
+  /* ===== NAV SECTIONS ===== */
+  nav.sticky {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(255,255,255,0.93); backdrop-filter: blur(10px);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.06); border-bottom: 1px solid var(--gris-bord);
+    padding: 9px 14px; display:flex; gap:6px; justify-content:center; flex-wrap:wrap;
+  }
+  nav.sticky a {
+    color: var(--gris); text-decoration: none; font-size: 0.82rem; font-weight: 600;
+    padding: 5px 12px; border-radius: 20px; transition: all 0.2s; white-space: nowrap;
+  }
+  nav.sticky a:hover { background: var(--bleu-clair); color: var(--bleu-fonce); }
+  nav.sticky a.home { background: var(--bleu-fonce); color: #fff; }
+  nav.sticky a.home:hover { background: var(--turquoise); }
+
+  /* ===== LAYOUT ===== */
+  .container { max-width: 940px; margin: 0 auto; padding: 32px 20px 50px; }
+
+  section.bloc {
+    background: #fff; border-radius: 14px; padding: 28px;
+    margin-bottom: 24px; box-shadow: var(--ombre); border: 1px solid var(--gris-bord);
+    scroll-margin-top: 64px;
+  }
+  section.bloc h2 {
+    font-size: 1.4rem; color: var(--bleu-fonce); margin-bottom: 14px;
+    display:flex; align-items:center; gap:11px; font-weight: 800;
+  }
+  section.bloc h2 .num {
+    background: linear-gradient(135deg, var(--bleu), var(--turquoise));
+    color:#fff; width:38px; height:38px; border-radius:11px;
+    display:inline-flex; align-items:center; justify-content:center;
+    font-size:1rem; flex-shrink:0;
+  }
+  section.bloc h3 {
+    color: var(--bleu); font-size:1.05rem; margin: 18px 0 7px; font-weight:700;
+    padding-left: 10px; border-left: 4px solid var(--turquoise);
+  }
+  section.bloc h4 { color: var(--gris-fonce); font-size:0.96rem; margin:14px 0 5px; font-weight:700; }
+  section.bloc strong { color: var(--bleu-fonce); }
+  section.bloc ul { margin: 6px 0 10px; list-style:none; }
+  section.bloc ul li { position:relative; padding-left:22px; margin-bottom:5px; }
+  section.bloc ul li::before {
+    content:"▸"; position:absolute; left:4px; color:var(--turquoise); font-weight:bold;
+  }
+
+  /* ===== BOÎTES ===== */
+  .box { border-radius:11px; padding:13px 18px; margin:12px 0; border-left:5px solid; font-size:0.92rem; }
+  .box .t { font-weight:800; margin-bottom:4px; display:flex; align-items:center; gap:7px; }
+  .piege { background:var(--rouge-clair); border-color:var(--rouge); color:#7f1d1d; }
+  .piege .t { color:var(--rouge); }
+  .memo { background:var(--violet-clair); border-color:var(--violet); color:#4c1d95; }
+  .memo .t { color:var(--violet); }
+  .def { background:var(--bleu-clair); border-color:var(--bleu); color:#1e3a5f; }
+  .def .t { color:var(--bleu-fonce); }
+  .exemple { background:var(--vert-clair); border-color:var(--vert); color:#14532d; }
+  .exemple .t { color:var(--vert); }
+
+  /* ===== TABLEAUX ===== */
+  table { width:100%; border-collapse:separate; border-spacing:0; margin:12px 0; font-size:0.84rem;
+          overflow:hidden; border-radius:11px; box-shadow:var(--ombre); }
+  thead th { background:var(--bleu-fonce); color:#fff; padding:9px 11px; text-align:left; font-weight:700; }
+  tbody td { padding:8px 11px; border-bottom:1px solid var(--gris-bord); vertical-align:top; }
+  tbody tr:nth-child(even) { background:var(--gris-clair); }
+  tbody tr:last-child td { border-bottom:none; }
+  table.center td, table.center th { text-align:center; }
+
+  /* ===== FLASHCARDS ===== */
+  .flashcards { display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:13px; margin-top:14px; perspective:1000px; }
+  .flashcard { height:135px; cursor:pointer; }
+  .fc-inner { position:relative; width:100%; height:100%; transition:transform 0.6s; transform-style:preserve-3d; }
+  .flashcard.retournee .fc-inner { transform:rotateY(180deg); }
+  .fc-face { position:absolute; inset:0; backface-visibility:hidden; border-radius:11px; padding:14px; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; box-shadow:var(--ombre); }
+  .fc-recto { background:linear-gradient(135deg,var(--bleu),var(--bleu-fonce)); color:#fff; }
+  .fc-verso { background:#fff; color:var(--gris-fonce); transform:rotateY(180deg); border:2px solid var(--bleu-clair); }
+  .fc-recto .label { font-size:0.64rem; text-transform:uppercase; letter-spacing:1px; opacity:0.8; margin-bottom:4px; }
+  .fc-recto .question { font-weight:700; font-size:0.92rem; }
+  .fc-verso .reponse { font-size:0.82rem; }
+  .fc-indice { font-size:0.66rem; color:var(--gris); margin-top:6px; font-style:italic; text-align:center; }
+
+  /* ===== CARTES TECHNIQUES ===== */
+  .techs { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:12px; margin-top:12px; }
+  .tech { border-radius:12px; padding:14px; border:2px solid; }
+  .tech h4 { margin-bottom:5px; font-size:0.92rem; }
+  .tech p { font-size:0.82rem; }
+  .tech.noire { background:var(--bleu-clair); border-color:var(--bleu); }
+  .tech.noire h4 { color:var(--bleu-fonce); }
+  .tech.blanche { background:var(--jaune-clair); border-color:var(--jaune); }
+  .tech.blanche h4 { color:#854d0e; }
+  .tech.exp { background:var(--violet-clair); border-color:var(--violet); }
+  .tech.exp h4 { color:#6d28d9; }
+
+  /* ===== FORMULE K3 ===== */
+  .formule {
+    background: var(--gris-fonce); color: #fff; border-radius: 11px;
+    padding: 14px 18px; margin: 12px 0; font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 0.88rem; overflow-x: auto;
+  }
+  .formule b { color: var(--turquoise); }
+
+  /* ===== PAGER ===== */
+  .chap-pager { display:flex; justify-content:space-between; gap:13px; margin: 30px 0 0; }
+  .chap-pager a { flex:1; background:#fff; border:2px solid var(--gris-bord); border-radius:13px; padding:16px 20px; text-decoration:none; color:inherit; transition:all 0.2s; }
+  .chap-pager a:hover { border-color:var(--bleu); box-shadow:var(--ombre); }
+  .chap-pager .dir { font-size:0.76rem; color:var(--gris); font-weight:600; text-transform:uppercase; letter-spacing:0.5px; }
+  .chap-pager .titre { font-weight:700; color:var(--bleu-fonce); font-size:0.95rem; margin-top:3px; }
+  .chap-pager a.suivant { text-align:right; }
+
+  footer { text-align:center; padding:24px 18px; color:var(--gris); font-size:0.82rem; border-top:1px solid var(--gris-bord); }
+  footer strong { color:var(--bleu-fonce); }
+
+  @media (max-width:640px) {
+    section.bloc { padding:20px 16px; }
+    .hero { padding:30px 16px; }
+    nav.sticky a { font-size:0.74rem; padding:4px 8px; }
+    .chap-nav a { font-size:0.72rem; padding:3px 7px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- BARRE INTER-CHAPITRES -->
+<div class="chap-nav">
+  <a href="index.html">🏠 Sommaire</a>
+  <span class="sep">·</span>
+  <a href="ISTQB_Chapitre1_Fondamentaux.html">Ch.1</a>
+  <a href="ISTQB_Chapitre2_SDLC.html">Ch.2</a>
+  <a href="ISTQB_Chapitre3_TestStatique.html">Ch.3</a>
+  <a href="#" class="actif">Ch.4</a>
+  <a href="ISTQB_Chapitre5_Gestion.html">Ch.5</a>
+  <a href="ISTQB_Chapitre6_Outils.html">Ch.6</a>
+</div>
+
+<header class="hero">
+  <span class="badge">ISTQB · Niveau Fondation v4.0</span>
+  <h1>Chapitre 4 — Techniques de test</h1>
+  <p>Le plus gros chapitre ! Boîte noire, boîte blanche, basée sur l'expérience, collaboration. Inclut les techniques K3 à appliquer.</p>
+  <div class="meta">
+    <span>⏱️ 390 min</span><span>📄 p.43–53</span><span>🎯 14 questions / 40</span>
+  </div>
+  <div class="k3">⚠️ Contient des objectifs K3 (appliquer / dériver des cas de test)</div>
+</header>
+
+<nav class="sticky">
+  <a href="index.html" class="home">🏠 Sommaire</a>
+  <a href="#mots">Mots-clés</a>
+  <a href="#s1">4.1 Aperçu</a>
+  <a href="#s2">4.2 Boîte noire</a>
+  <a href="#s3">4.3 Boîte blanche</a>
+  <a href="#s4">4.4 Expérience</a>
+  <a href="#s5">4.5 Collaboration</a>
+</nav>
+
+<main class="container">
+
+  <!-- MOTS-CLÉS EN FLASHCARDS -->
+  <section class="bloc" id="mots">
+    <h2><span class="num">🔑</span> Mots-clés en flashcards</h2>
+    <p>Termes officiels du syllabus. <strong>Clique sur une carte</strong> pour voir la définition.</p>
+    <div class="flashcards" id="flashcards"></div>
+  </section>
+
+  <!-- 4.1 -->
+  <section class="bloc" id="s1">
+    <h2><span class="num">4.1</span> Aperçu des techniques de test</h2>
+
+    <p>Les techniques de test aident à développer de manière <strong>systématique</strong> un ensemble de cas de test <strong>restreint mais suffisant</strong>. Elles aident à définir les conditions, identifier les éléments de couverture & les données de test.</p>
+
+    <h3>FL-4.1.1 — Les 3 catégories (K2)</h3>
+    <div class="techs">
+      <div class="tech noire"><h4>⬛ Boîte noire</h4><p>Basée sur le <strong>comportement spécifié</strong>, sans référence à la structure interne. Cas indépendants de l'implémentation.</p></div>
+      <div class="tech blanche"><h4>⬜ Boîte blanche</h4><p>Basée sur la <strong>structure interne</strong> & le traitement. Cas créés <strong>après</strong> la conception/implémentation.</p></div>
+      <div class="tech exp"><h4>🧠 Basée sur l'expérience</h4><p>Utilise les connaissances & l'expérience du testeur. <strong>Complémentaire</strong> des deux autres.</p></div>
+    </div>
+    <div class="box memo"><strong>Boîte noire = basée sur les spécifications</strong> · <strong>Boîte blanche = basée sur la structure</strong>. Les techniques basées sur l'expérience détectent des défauts qui échappent aux autres.</div>
+  </section>
+
+  <!-- 4.2 BOÎTE NOIRE -->
+  <section class="bloc" id="s2">
+    <h2><span class="num">4.2</span> Techniques boîte noire (K3 ★)</h2>
+
+    <h3>FL-4.2.1 — Partitions d'équivalence (K3)</h3>
+    <p>Diviser les données en <strong>partitions</strong> : tous les éléments d'une partition sont traités de la <strong>même manière</strong>. Si une valeur détecte un défaut, les autres de la même partition le détecteront aussi → <strong>1 test par partition suffit</strong>.</p>
+    <ul>
+      <li>Partitions <strong>valides</strong> (traitées) / <strong>invalides</strong> (ignorées/rejetées).</li>
+      <li>Peuvent être continues, discrètes, ordonnées ou non, finies ou infinies.</li>
+      <li><strong>Ne se chevauchent pas</strong> & non vides.</li>
+    </ul>
+    <p><strong>Élément de couverture :</strong> les partitions. <strong>Couverture 100% :</strong> exercer chaque partition (valide + invalide) au moins une fois.</p>
+    <div class="box exemple"><div class="t">✏️ Exemple K3</div>
+    Champ « âge » acceptant 18–65 ans.<br>
+    <strong>Partitions :</strong> invalide [&lt;18] · valide [18–65] · invalide [&gt;65]<br>
+    → <strong>3 cas de test minimum</strong> (1 par partition) : ex. 10, 30, 80.</div>
+    <div class="box memo"><strong>Couverture Each Choice</strong> (multi-paramètres) : chaque partition de chaque ensemble doit être exercée au moins une fois. <strong>Ne prend pas en compte les combinaisons</strong>.</div>
+
+    <h3>FL-4.2.2 — Analyse des valeurs limites (K3)</h3>
+    <p>Base sur l'exercice des <strong>limites des partitions</strong> (où les devs font le plus d'erreurs). <strong>Uniquement pour partitions ordonnées</strong>.</p>
+    <table>
+      <thead><tr><th>Technique</th><th>Éléments de couverture par limite</th><th>Couverture 100%</th></tr></thead>
+      <tbody>
+        <tr><td><strong>2 valeurs</strong></td><td>La valeur limite + sa <strong>voisine</strong> de la partition adjacente</td><td>Toutes les valeurs limites exercées</td></tr>
+        <tr><td><strong>3 valeurs</strong></td><td>La valeur limite + ses <strong>2 voisines</strong></td><td>Toutes les limites + voisines exercées</td></tr>
+      </tbody>
+    </table>
+    <div class="box piege"><div class="t">⚠️ Piège classique</div>
+    3 valeurs est <strong>plus rigoureuse</strong> que 2 valeurs. Ex : si « si (x ≤ 10) » est mal codé « si (x = 10) », la 2-valeurs (x=10, x=11) <strong>ne détecte pas</strong> le défaut, mais la 3-valeurs (x=9) <strong>le détecte</strong>.</div>
+    <div class="box exemple"><div class="t">✏️ Exemple K3 — Champ 18–65 ans</div>
+    <strong>2 valeurs :</strong> 17, 18, 65, 66 → <strong>4 cas</strong><br>
+    <strong>3 valeurs :</strong> 16, 17, 18, 64, 65, 66 → <strong>6 cas</strong><br>
+    <em>(les bornes + leurs voisines de chaque côté)</em></div>
+
+    <h3>FL-4.2.3 — Test par tables de décisions (K3)</h3>
+    <p>Teste comment les <strong>combinaisons de conditions</strong> aboutissent à des résultats différents. Efficace pour enregistrer une logique complexe (règles de gestion).</p>
+    <ul>
+      <li><strong>Lignes</strong> = conditions & actions. <strong>Colonnes</strong> = règles de décision (combinaison unique).</li>
+      <li><strong>Entrée limitée</strong> : booléen (V/F). <strong>Entrée étendue</strong> : valeurs multiples (plages, partitions…).</li>
+    </ul>
+    <p>Notation : <strong>V</strong> (vrai) · <strong>F</strong> (faux) · <strong>-</strong> (non pertinente) · <strong>N/A</strong> (irréalisable) · <strong>X</strong> (action a lieu).</p>
+    <p><strong>Élément de couverture :</strong> colonnes avec combinaisons <strong>réalisables</strong>. <strong>Couverture 100%</strong> : exercer toutes ces colonnes.</p>
+    <div class="box piege"><div class="t">⚠️ Piège exponentiel</div>
+    Le nombre de règles croît de manière <strong>exponentielle</strong> avec le nombre de conditions. → Utiliser une table <strong>réduite</strong> ou une approche basée sur les risques.</div>
+    <div class="box memo">La table de décision permet de trouver des <strong>lacunes ou contradictions</strong> dans les exigences.</div>
+
+    <h3>FL-4.2.4 — Test de transition d'état (K3)</h3>
+    <p>Modélise le comportement via <strong>états</strong> & <strong>transitions valides</strong>. Une transition est initiée par un <strong>événement</strong>, qualifié par une <strong>condition de garde</strong>, pouvant entraîner une <strong>action</strong>.</p>
+    <div class="formule">Syntaxe : <b>événement</b> [<b>condition de garde</b>] / <b>action</b></div>
+    <p>La <strong>table d'états</strong> (lignes = états, colonnes = événements) montre explicitement les transitions <strong>non valides</strong> (cellules vides), contrairement au diagramme.</p>
+    <h4>Les 3 critères de couverture</h4>
+    <table>
+      <thead><tr><th>Critère</th><th>Élément de couverture</th><th>Force</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Tous les états</strong></td><td>Les états</td><td>Plus <strong>faible</strong></td></tr>
+        <tr><td><strong>Transitions valides</strong> (0-switch)</td><td>Transitions valides uniques</td><td>Le plus <strong>largement utilisé</strong></td></tr>
+        <tr><td><strong>Toutes les transitions</strong></td><td>Valides + non valides</td><td>Le plus <strong>rigoureux</strong> (critique/sécurité)</td></tr>
+      </tbody>
+    </table>
+    <div class="box memo"><div class="t">🧠 Hiérarchie de force</div>
+    Tous les états &lt; Transitions valides &lt; Toutes les transitions.<br>
+    Transitions valides 100% <strong>garantit</strong> tous les états 100%. Ne tester qu'<strong>une transition non valide</strong> par cas = éviter le masquage de défauts.</div>
+  </section>
+
+  <!-- 4.3 BOÎTE BLANCHE -->
+  <section class="bloc" id="s3">
+    <h2><span class="num">4.3</span> Techniques boîte blanche (K2)</h2>
+    <p>Basées sur la structure du code. Ce syllabus couvre 2 techniques liées au code.</p>
+
+    <h3>FL-4.3.1 — Test des instructions (K2)</h3>
+    <p><strong>Élément de couverture :</strong> les instructions exécutables. <strong>Couverture 100%</strong> = toutes les instructions exécutées au moins une fois.</p>
+    <div class="box piege">Couverture des instructions 100% <strong>ne garantit pas</strong> que toute la logique de décision est testée (les branches peuvent ne pas l'être). Ne détecte pas les défauts liés aux données (ex : division par zéro).</div>
+
+    <h3>FL-4.3.2 — Test des branches (K2)</h3>
+    <p>Une <strong>branche</strong> = transfert de contrôle entre 2 nœuds. Peut être <strong>inconditionnelle</strong> (code en ligne droite) ou <strong>conditionnelle</strong> (résultat de décision : if/then, switch/case, boucle).</p>
+    <p><strong>Élément de couverture :</strong> les branches. <strong>Couverture 100%</strong> = toutes les branches exercées.</p>
+    <div class="box memo"><strong>La couverture des branches englobe celle des instructions</strong> : 100% branches → 100% instructions (mais <strong>pas l'inverse</strong>).</div>
+
+    <h3>FL-4.3.3 — Valeur des tests boîte blanche (K2)</h3>
+    <ul>
+      <li><strong>Force :</strong> toute l'implémentation est prise en compte → détecte les défauts même si la spec est vague, obsolète ou incomplète.</li>
+      <li><strong>Faiblesse :</strong> si une exigence n'est <strong>pas implémentée</strong>, le test boîte blanche ne détectera pas le défaut d'omission.</li>
+      <li>Fournit une mesure <strong>objective</strong> de la couverture (la boîte noire ne le permet pas).</li>
+    </ul>
+  </section>
+
+  <!-- 4.4 EXPÉRIENCE -->
+  <section class="bloc" id="s4">
+    <h2><span class="num">4.4</span> Techniques basées sur l'expérience (K2)</h2>
+
+    <h3>FL-4.4.1 — Estimation d'erreurs (K2)</h3>
+    <p>Anticiper les erreurs/défauts/défaillances à partir des connaissances du testeur : comportement passé de l'app, erreurs typiques des devs, défaillances d'applications similaires.</p>
+    <p>Domaines : entrée, sortie, logique, calcul, interfaces, données.</p>
+    <div class="box memo"><strong>Attaques de fautes</strong> = approche méthodique : liste d'erreurs possibles → tests conçus pour identifier/exposer/provoquer les défauts associés.</div>
+
+    <h3>FL-4.4.2 — Test exploratoire (K2)</h3>
+    <p>Tests <strong>simultanément conçus, exécutés et évalués</strong> pendant que le testeur découvre l'objet de test.</p>
+    <ul>
+      <li>Structuré via le <strong>test basé sur des sessions</strong> : temps défini + <strong>charte de test</strong> (objectifs) + débriefing.</li>
+      <li>Utile quand les specs sont peu nombreuses/inadéquates ou sous <strong>pression de temps</strong>.</li>
+      <li>Plus efficace si testeur expérimenté + connaissance du domaine + créativité.</li>
+      <li>Peut intégrer d'autres techniques (ex : partitions d'équivalence).</li>
+    </ul>
+
+    <h3>FL-4.4.3 — Test basé sur des checklists (K2)</h3>
+    <p>Concevoir/exécuter des tests pour couvrir les conditions d'une <strong>checklist</strong> (basée sur l'expérience, l'importance utilisateur, les échecs connus).</p>
+    <ul>
+      <li>Éléments souvent formulés en <strong>question</strong>, vérifiables séparément & directement.</li>
+      <li><strong>Ne doit pas contenir</strong> : éléments vérifiables automatiquement, critères d'entrée/sortie, éléments trop généraux.</li>
+      <li>Doivent être <strong>régulièrement mises à jour</strong> (analyse des défauts), sans devenir trop longues.</li>
+    </ul>
+    <div class="box memo">Checklists de haut niveau → couverture potentiellement plus grande mais <strong>répétabilité moindre</strong>.</div>
+  </section>
+
+  <!-- 4.5 COLLABORATION -->
+  <section class="bloc" id="s5">
+    <h2><span class="num">4.5</span> Approches basées sur la collaboration (K2/K3)</h2>
+    <p>Contrairement aux autres techniques (détection de défauts), celles-ci se concentrent aussi sur l'<strong>évitement des défauts</strong> par la collaboration.</p>
+
+    <h3>FL-4.5.1 — Rédaction collaborative de User Stories (K2)</h3>
+    <p>Une <strong>User Story</strong> = caractéristique utile à l'utilisateur/acheteur. Les <strong>3 C</strong> (Jeffries) :</p>
+    <table>
+      <thead><tr><th>C</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Carte</strong></td><td>Le support décrivant la US (carte d'index, entrée tableau…)</td></tr>
+        <tr><td><strong>Conversation</strong></td><td>Explique comment le logiciel sera utilisé (doc ou verbale)</td></tr>
+        <tr><td><strong>Confirmation</strong></td><td>Les critères d'acceptation</td></tr>
+      </tbody>
+    </table>
+    <div class="formule">Format US : <b>En tant que</b> [rôle], <b>je veux</b> [objectif], <b>afin de</b> [valeur métier]</div>
+    <div class="box memo"><strong>INVEST</strong> — Une bonne US doit être : <strong>I</strong>ndépendante, <strong>N</strong>égociable, <strong>V</strong>aleur, <strong>E</strong>stimable, <strong>S</strong>imple/Petite, <strong>T</strong>estable.</div>
+
+    <h3>FL-4.5.2 — Critères d'acceptation (K2)</h3>
+    <p>Conditions à remplir pour que la US soit <strong>acceptée</strong> par les parties prenantes. = Conditions de test à vérifier.</p>
+    <p>Usages : définir le périmètre · consensus · scénarios +/− · base des tests d'acceptation · planification/estimation.</p>
+    <h4>2 formats principaux</h4>
+    <table>
+      <thead><tr><th>Orienté-scénario</th><th>Orienté-règles</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Given/When/Then</strong> (BDD, §2.1.3)</td><td>Liste à puces ou tableau entrée-sortie</td></tr>
+      </tbody>
+    </table>
+
+    <h3>FL-4.5.3 — ATDD (K3)</h3>
+    <p><strong>Développement piloté par les tests d'acceptation</strong> : cas de test créés <strong>avant</strong> l'implémentation de la US, par des membres aux perspectives différentes (clients, devs, testeurs).</p>
+    <h4>Le processus ATDD</h4>
+    <table>
+      <thead><tr><th>Étape</th><th>Action</th></tr></thead>
+      <tbody>
+        <tr><td><strong>1. Atelier de spécification</strong></td><td>US & critères d'acceptation analysés, discutés, rédigés. Lacunes/ambiguïtés résolues.</td></tr>
+        <tr><td><strong>2. Création des cas de test</strong></td><td>Basés sur les critères = <strong>exemples</strong> du fonctionnement. « Exemples » et « tests » = synonymes.</td></tr>
+      </tbody>
+    </table>
+    <div class="box memo">Ordre des tests : <strong>positifs d'abord</strong> (comportement correct), puis <strong>négatifs</strong>, puis <strong>non fonctionnels</strong> (perf, utilisabilité).</div>
+    <div class="box piege">Les cas de test doivent couvrir <strong>toutes</strong> les caractéristiques de la US et <strong>ne pas aller au-delà</strong>. Aucun cas ne doit décrire les mêmes caractéristiques. → Avec un framework d'auto, ils deviennent des <strong>exigences exécutables</strong>.</div>
+  </section>
+
+  <!-- PAGER INTER-CHAPITRES -->
+  <div class="chap-pager">
+    <a href="ISTQB_Chapitre3_TestStatique.html">
+      <div class="dir">← Précédent</div>
+      <div class="titre">Ch.3 — Test statique</div>
+    </a>
+    <a href="ISTQB_Chapitre5_Gestion.html" class="suivant">
+      <div class="dir">Chapitre suivant →</div>
+      <div class="titre">Ch.5 — Gestion des activités de test</div>
+    </a>
+  </div>
+
+</main>
+
+<footer>
+  Mémo · <strong>ISTQB Certified Tester — Niveau Fondation v4.0</strong> · Chap.4 (p.43–53)<br>
+  À utiliser avec le syllabus officiel. Bonne révision ! 🚀
+</footer>
+
+<script>
+const flashcards = [
+  { q: "Technique de test", r: "Aide à développer de façon systématique un ensemble restreint mais suffisant de cas de test." },
+  { q: "Technique boîte noire", r: "Basée sur le COMPORTEMENT SPÉCIFIÉ, sans référence à la structure interne. Indépendante de l'implémentation." },
+  { q: "Technique boîte blanche", r: "Basée sur la STRUCTURE INTERNE & le traitement. Cas créés après la conception/implémentation." },
+  { q: "Technique basée sur l'expérience", r: "Utilise les connaissances & l'expérience du testeur. Complémentaire des autres." },
+  { q: "Partition d'équivalence", r: "Divise les données en partitions traitées de la même façon. 1 test par partition suffit (valide + invalide)." },
+  { q: "Analyse des valeurs limites", r: "Exerce les LIMITES des partitions (uniquement ordonnées). 2-valeurs ou 3-valeurs." },
+  { q: "Valeurs limites 2-valeurs", r: "Par limite : la valeur limite + sa voisine de la partition adjacente." },
+  { q: "Valeurs limites 3-valeurs", r: "Par limite : la valeur limite + ses 2 voisines. Plus rigoureuse que 2-valeurs." },
+  { q: "Test par tables de décisions", r: "Teste les COMBINAISONS DE CONDITIONS → résultats. Lignes = conditions/actions, colonnes = règles." },
+  { q: "Table de décision (entrée limitée)", r: "Toutes les conditions & actions sont booléennes (Vrai/Faux)." },
+  { q: "Table de décision (entrée étendue)", r: "Conditions & actions peuvent prendre des valeurs multiples (plages, partitions…)." },
+  { q: "Test de transition d'état", r: "Modélise états & transitions valides. Événement [garde] / action." },
+  { q: "Couverture tous les états", r: "Élément = les états. 100% = tous les états visités. Le plus FAIBLE." },
+  { q: "Couverture transitions valides (0-switch)", r: "Élément = transitions valides. Le plus LARGEMENT UTILISÉ. Garantit tous les états." },
+  { q: "Couverture toutes les transitions", r: "Valides + non valides. Le plus RIGOUREUX (critique/sécurité)." },
+  { q: "Couverture des instructions", r: "Boîte blanche. Élément = instructions exécutables. 100% = toutes exécutées au moins 1 fois." },
+  { q: "Couverture des branches", r: "Boîte blanche. Élément = branches (transferts de contrôle). ENGLOBE les instructions." },
+  { q: "Estimation d'erreurs", r: "Anticiper erreurs/défauts à partir de l'expérience. Attaques de fautes = approche méthodique." },
+  { q: "Test exploratoire", r: "Tests conçus, exécutés & évalués SIMULTANÉMENT. Utile si specs faibles ou pression de temps." },
+  { q: "Test basé sur des checklists", r: "Couvrir les conditions d'une checklist (en questions). À mettre à jour régulièrement." },
+  { q: "User Story (3 C)", r: "Carte (support) + Conversation (usage) + Confirmation (critères d'acceptation)." },
+  { q: "INVEST", r: "Une bonne US : Indépendante, Négociable, Valeur, Estimable, Simple, Testable." },
+  { q: "Critères d'acceptation", r: "Conditions à remplir pour accepter la US. = conditions de test. Formats : scénario ou règles." },
+  { q: "ATDD", r: "Tests d'acceptation créés AVANT l'implémentation. Atelier de spec → cas de test (exemples)." },
+  { q: "Approche basée sur la collaboration", r: "Concentrée sur l'ÉVITEMENT des défauts (pas seulement détection) via collaboration." },
+  { q: "Couverture", r: "Degré auquel les éléments de couverture sont exercés, exprimé en %." },
+  { q: "Élément de couverture", r: "Entité (partition, branche, état…) qui doit être exercée pour atteindre une couverture." },
+];
+const fc = document.getElementById('flashcards');
+flashcards.forEach(c => {
+  const d = document.createElement('div');
+  d.className = 'flashcard';
+  d.innerHTML = `<div class="fc-inner">
+    <div class="fc-face fc-recto"><div class="label">Terme</div><div class="question">${c.q}</div></div>
+    <div class="fc-face fc-verso"><div class="label" style="font-size:0.64rem;color:var(--gris);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Définition</div><div class="reponse">${c.r}</div></div>
+  </div>
+  <div class="fc-indice">clique pour retourner</div>`;
+  d.addEventListener('click', () => d.classList.toggle('retournee'));
+  fc.appendChild(d);
+});
+</script>
+
+</body>
+</html>

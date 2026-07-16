@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ISTQB — Chap.1 Mémo · Fondamentaux des tests</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bleu-fonce: #1e3a5f; --bleu: #2d6a9f; --bleu-clair: #e7f1fb;
+    --turquoise: #0d9488; --turquoise-clair: #ccfbf1;
+    --orange: #ea7317; --rouge: #dc2626; --rouge-clair: #fee2e2;
+    --vert: #16a34a; --vert-clair: #dcfce7;
+    --violet: #7c3aed; --violet-clair: #ede9fe;
+    --jaune: #ca8a04; --jaune-clair: #fef9c3;
+    --gris-fonce: #1f2937; --gris: #4b5563; --gris-clair: #f3f4f6;
+    --gris-bord: #e5e7eb; --fond: #f8fafc;
+    --ombre: 0 4px 20px rgba(30,58,95,0.08);
+  }
+
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, 'Helvetica Neue', sans-serif;
+    color: var(--gris-fonce); background: var(--fond);
+    line-height: 1.5; font-size: 15.5px;
+  }
+  html { scroll-behavior: smooth; }
+
+  /* ===== BARRE INTER-CHAPITRES (haut) ===== */
+  .chap-nav {
+    background: var(--bleu-fonce); color: #fff; padding: 9px 14px;
+    display: flex; gap: 6px; justify-content: center; flex-wrap: wrap;
+    font-size: 0.8rem; align-items: center;
+  }
+  .chap-nav a {
+    color: rgba(255,255,255,0.65); text-decoration: none; padding: 4px 10px;
+    border-radius: 20px; font-weight: 600; transition: all 0.2s; white-space: nowrap;
+  }
+  .chap-nav a:hover { background: rgba(255,255,255,0.12); color: #fff; }
+  .chap-nav a.actif { background: var(--turquoise); color: #fff; }
+  .chap-nav a.disabled { opacity: 0.4; cursor: not-allowed; }
+  .chap-nav .sep { color: rgba(255,255,255,0.3); }
+
+  /* ===== NAV HOME BTN ===== */
+  nav.sticky a.home { background: var(--bleu-fonce); color: #fff; }
+  nav.sticky a.home:hover { background: var(--turquoise); }
+
+  /* ===== PAGER BAS DE PAGE ===== */
+  .chap-pager {
+    display:flex; justify-content:space-between; gap:13px; margin: 30px 0 0;
+  }
+  .chap-pager a {
+    flex:1; background:#fff; border:2px solid var(--gris-bord); border-radius:13px;
+    padding:16px 20px; text-decoration:none; color:inherit; transition:all 0.2s;
+  }
+  .chap-pager a:hover { border-color:var(--bleu); box-shadow:var(--ombre); }
+  .chap-pager .dir { font-size:0.76rem; color:var(--gris); font-weight:600; text-transform:uppercase; letter-spacing:0.5px; }
+  .chap-pager .titre { font-weight:700; color:var(--bleu-fonce); font-size:0.95rem; margin-top:3px; }
+  .chap-pager a.suivant { text-align:right; }
+  .chap-pager a.disabled { opacity:0.5; pointer-events:none; }
+
+  /* ===== HERO ===== */
+  .hero {
+    background: linear-gradient(135deg, var(--bleu-fonce), var(--bleu) 55%, var(--turquoise));
+    color: #fff; padding: 44px 20px 46px; text-align: center;
+  }
+  .hero .badge {
+    display: inline-block; background: rgba(255,255,255,0.18);
+    padding: 5px 16px; border-radius: 50px; font-size: 0.78rem;
+    font-weight: 600; letter-spacing: 1px; margin-bottom: 14px;
+    border: 1px solid rgba(255,255,255,0.25);
+  }
+  .hero h1 { font-size: clamp(1.7rem,4.5vw,2.6rem); font-weight: 800; margin-bottom: 8px; }
+  .hero p { font-size: 0.98rem; opacity: 0.95; max-width: 600px; margin: 0 auto; }
+  .hero .meta { margin-top: 16px; display:flex; gap:10px; justify-content:center; flex-wrap:wrap; }
+  .hero .meta span {
+    background: rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.2);
+    padding: 6px 14px; border-radius: 30px; font-size: 0.82rem; font-weight: 600;
+  }
+
+  /* ===== NAV ===== */
+  nav.sticky {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(255,255,255,0.93); backdrop-filter: blur(10px);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.06); border-bottom: 1px solid var(--gris-bord);
+    padding: 9px 14px; display:flex; gap:6px; justify-content:center; flex-wrap:wrap;
+  }
+  nav.sticky a {
+    color: var(--gris); text-decoration: none; font-size: 0.82rem; font-weight: 600;
+    padding: 5px 12px; border-radius: 20px; transition: all 0.2s; white-space: nowrap;
+  }
+  nav.sticky a:hover { background: var(--bleu-clair); color: var(--bleu-fonce); }
+
+  /* ===== LAYOUT ===== */
+  .container { max-width: 940px; margin: 0 auto; padding: 32px 20px 70px; }
+
+  section.bloc {
+    background: #fff; border-radius: 14px; padding: 28px;
+    margin-bottom: 24px; box-shadow: var(--ombre); border: 1px solid var(--gris-bord);
+    scroll-margin-top: 64px;
+  }
+  section.bloc h2 {
+    font-size: 1.4rem; color: var(--bleu-fonce); margin-bottom: 14px;
+    display:flex; align-items:center; gap:11px; font-weight: 800;
+  }
+  section.bloc h2 .num {
+    background: linear-gradient(135deg, var(--bleu), var(--turquoise));
+    color:#fff; width:38px; height:38px; border-radius:11px;
+    display:inline-flex; align-items:center; justify-content:center;
+    font-size:1rem; flex-shrink:0;
+  }
+  section.bloc h3 {
+    color: var(--bleu); font-size:1.05rem; margin: 18px 0 7px; font-weight:700;
+    padding-left: 10px; border-left: 4px solid var(--turquoise);
+  }
+  section.bloc strong { color: var(--bleu-fonce); }
+  section.bloc ul { margin: 6px 0 10px; list-style:none; }
+  section.bloc ul li { position:relative; padding-left:22px; margin-bottom:5px; }
+  section.bloc ul li::before {
+    content:"▸"; position:absolute; left:4px; color:var(--turquoise); font-weight:bold;
+  }
+
+  /* ===== BOÎTES ===== */
+  .box { border-radius:11px; padding:13px 18px; margin:12px 0; border-left:5px solid; font-size:0.92rem; }
+  .box .t { font-weight:800; margin-bottom:4px; display:flex; align-items:center; gap:7px; }
+  .piege { background:var(--rouge-clair); border-color:var(--rouge); color:#7f1d1d; }
+  .piege .t { color:var(--rouge); }
+  .memo { background:var(--violet-clair); border-color:var(--violet); color:#4c1d95; }
+  .memo .t { color:var(--violet); }
+  .def { background:var(--bleu-clair); border-color:var(--bleu); color:#1e3a5f; }
+  .def .t { color:var(--bleu-fonce); }
+
+  /* ===== TABLEAUX ===== */
+  table { width:100%; border-collapse:separate; border-spacing:0; margin:12px 0; font-size:0.88rem;
+          overflow:hidden; border-radius:11px; box-shadow:var(--ombre); }
+  thead th { background:var(--bleu-fonce); color:#fff; padding:10px 13px; text-align:left; font-weight:700; }
+  tbody td { padding:9px 13px; border-bottom:1px solid var(--gris-bord); vertical-align:top; }
+  tbody tr:nth-child(even) { background:var(--gris-clair); }
+  tbody tr:last-child td { border-bottom:none; }
+
+  /* ===== MOTS-CLÉS ===== */
+  .cloud { display:flex; flex-wrap:wrap; gap:6px; margin-top:8px; }
+  .cloud span {
+    background:var(--turquoise-clair); color:#115e59; padding:4px 11px;
+    border-radius:30px; font-size:0.8rem; font-weight:600; border:1px solid #5eead4;
+  }
+
+  /* ===== 7 PRINCIPES ===== */
+  .principes { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:13px; margin-top:14px; }
+  .principe { border-radius:13px; padding:16px; color:#fff; position:relative; overflow:hidden; box-shadow:var(--ombre); }
+  .principe .pn { font-size:2.3rem; font-weight:900; opacity:0.3; position:absolute; top:4px; right:12px; line-height:1; }
+  .principe h4 { color:#fff; font-size:0.98rem; margin-bottom:6px; max-width:82%; }
+  .principe p { font-size:0.84rem; opacity:0.96; }
+  .p1{background:linear-gradient(135deg,#1e3a5f,#2d6a9f);} .p2{background:linear-gradient(135deg,#0d9488,#14b8a6);}
+  .p3{background:linear-gradient(135deg,#ea7317,#f59e0b);} .p4{background:linear-gradient(135deg,#7c3aed,#a855f7);}
+  .p5{background:linear-gradient(135deg,#dc2626,#ef4444);} .p6{background:linear-gradient(135deg,#16a34a,#22c55e);}
+  .p7{background:linear-gradient(135deg,#0891b2,#06b6d4);}
+
+  /* ===== CHAÎNE FLUX ===== */
+  .chaine { display:flex; flex-wrap:wrap; align-items:stretch; gap:6px; margin:12px 0; }
+  .chaine .maillon {
+    flex:1; min-width:120px; background:var(--bleu-clair); border-radius:10px;
+    padding:10px; text-align:center; border:2px solid var(--bleu);
+  }
+  .chaine .maillon b { display:block; color:var(--bleu-fonce); font-size:0.92rem; }
+  .chaine .maillon span { font-size:0.76rem; color:var(--gris); }
+  .chaine .fleche { display:flex; align-items:center; color:var(--turquoise); font-weight:bold; font-size:1.3rem; }
+
+  /* ===== TIMELINE ===== */
+  .tl { display:flex; flex-direction:column; gap:0; margin-top:12px; }
+  .etape { display:flex; gap:13px; align-items:flex-start; }
+  .etape .past {
+    flex-shrink:0; width:38px; height:38px; border-radius:50%;
+    background:linear-gradient(135deg,var(--bleu),var(--turquoise)); color:#fff;
+    display:flex; align-items:center; justify-content:center; font-weight:800; font-size:0.9rem;
+    box-shadow:0 3px 8px rgba(13,148,136,0.3); z-index:1;
+  }
+  .etape .ct {
+    background:var(--gris-clair); border-radius:11px; padding:11px 15px;
+    margin-bottom:11px; flex:1; border-left:4px solid var(--turquoise);
+  }
+  .etape .ct b { color:var(--bleu-fonce); font-size:0.92rem; }
+  .etape .ct p { font-size:0.84rem; margin:2px 0 0; }
+  .etape .q { display:inline-block; background:var(--turquoise); color:#fff; font-size:0.72rem; font-weight:700; padding:2px 8px; border-radius:20px; margin-top:5px; }
+
+  /* ===== FLASHCARDS ===== */
+  .flashcards { display:grid; grid-template-columns:repeat(auto-fill,minmax(230px,1fr)); gap:13px; margin-top:14px; perspective:1000px; }
+  .flashcard { height:140px; cursor:pointer; }
+  .fc-inner { position:relative; width:100%; height:100%; transition:transform 0.6s; transform-style:preserve-3d; }
+  .flashcard.retournee .fc-inner { transform:rotateY(180deg); }
+  .fc-face { position:absolute; inset:0; backface-visibility:hidden; border-radius:11px; padding:15px; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; box-shadow:var(--ombre); }
+  .fc-recto { background:linear-gradient(135deg,var(--bleu),var(--bleu-fonce)); color:#fff; }
+  .fc-verso { background:#fff; color:var(--gris-fonce); transform:rotateY(180deg); border:2px solid var(--bleu-clair); }
+  .fc-recto .label { font-size:0.66rem; text-transform:uppercase; letter-spacing:1px; opacity:0.8; margin-bottom:4px; }
+  .fc-recto .question { font-weight:700; font-size:0.95rem; }
+  .fc-verso .reponse { font-size:0.84rem; }
+  .fc-indice { font-size:0.68rem; color:var(--gris); margin-top:6px; font-style:italic; text-align:center; }
+
+  footer { text-align:center; padding:24px 18px; color:var(--gris); font-size:0.82rem; border-top:1px solid var(--gris-bord); }
+  footer strong { color:var(--bleu-fonce); }
+
+  @media (max-width:640px) {
+    section.bloc { padding:20px 16px; }
+    .hero { padding:32px 16px; }
+    nav.sticky a { font-size:0.76rem; padding:4px 9px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- BARRE INTER-CHAPITRES -->
+<div class="chap-nav">
+  <a href="index.html">🏠 Sommaire</a>
+  <span class="sep">·</span>
+  <a href="#" class="actif">Ch.1</a>
+  <a href="ISTQB_Chapitre2_SDLC.html">Ch.2</a>
+  <a href="ISTQB_Chapitre3_TestStatique.html">Ch.3</a>
+  <a href="ISTQB_Chapitre4_Techniques.html">Ch.4</a>
+  <a href="ISTQB_Chapitre5_Gestion.html">Ch.5</a>
+  <a href="ISTQB_Chapitre6_Outils.html">Ch.6</a>
+</div>
+
+<header class="hero">
+  <span class="badge">ISTQB · Niveau Fondation v4.0</span>
+  <h1>Chapitre 1 — Fondamentaux des tests</h1>
+  <p>Mémo express : l'essentiel à savoir avant l'examen.</p>
+  <div class="meta">
+    <span>⏱️ 180 min</span><span>📄 p.16–26</span><span>🎯 6 questions / 40</span>
+  </div>
+</header>
+
+<nav class="sticky">
+  <a href="index.html" class="home">🏠 Sommaire</a>
+  <a href="#mots">Mots-clés</a>
+  <a href="#s1">1.1 Tester</a>
+  <a href="#s2">1.2 Pourquoi</a>
+  <a href="#s3">1.3 7 principes</a>
+  <a href="#s4">1.4 Activités</a>
+  <a href="#s5">1.5 Compétences</a>
+</nav>
+
+<main class="container">
+
+  <!-- MOTS-CLÉS EN FLASHCARDS -->
+  <section class="bloc" id="mots">
+    <h2><span class="num">🔑</span> Mots-clés en flashcards</h2>
+    <p>Termes officiels du syllabus. <strong>Clique sur une carte</strong> pour voir la définition.</p>
+    <div class="flashcards" id="flashcards"></div>
+    <div class="box memo"><div class="t">🧠 La chaîne à connaître par cœur</div>
+    <strong>Cause racine → Erreur → Défaut → Défaillance</strong></div>
+  </section>
+
+  <!-- 1.1 -->
+  <section class="bloc" id="s1">
+    <h2><span class="num">1.1</span> Qu'est-ce que le test ?</h2>
+
+    <p>Tester = ensemble d'activités pour <strong>découvrir les défauts</strong> et <strong>évaluer la qualité</strong> des artefacts (= <strong>objets de test</strong>).</p>
+
+    <div class="box piege"><div class="t">⚠️ 2 pièges majeurs</div>
+    <ul style="margin-bottom:0">
+      <li>Tester ≠ juste exécuter le code (analyse, conception, revues…).</li>
+      <li><strong>Vérification</strong> = « produit correctement » (exigences). <strong>Validation</strong> = « le bon produit » (besoins utilisateurs).</li>
+    </ul></div>
+
+    <h3>Dynamique vs Statique</h3>
+    <table>
+      <thead><tr><th>Dynamique</th><th>Statique</th></tr></thead>
+      <tbody>
+        <tr><td>Exécute le logiciel</td><td>N'exécute <strong>pas</strong></td></tr>
+        <tr><td>Provoque des défaillances</td><td>Constate directement les défauts</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Objectifs typiques du test (K1)</h3>
+    <ul>
+      <li>Évaluer les artefacts (exigences, User Stories, code…)</li>
+      <li>Provoquer défaillances / trouver défauts</li>
+      <li>Assurer la couverture requise</li>
+      <li>Réduire le risque de mauvaise qualité</li>
+      <li>Vérifier exigences + conformité (contrat, loi, réglementation)</li>
+      <li>Informations pour décisions éclairées</li>
+      <li>Confiance dans la qualité + validation (complet, comme attendu)</li>
+    </ul>
+    <div class="box piege" style="margin-top:8px">Réponse « <em>prouver qu'il n'y a aucun défaut</em> » → <strong>toujours FAUX</strong>.</div>
+
+    <h3>Test vs Débogage (K2)</h3>
+    <table>
+      <thead><tr><th>Test</th><th>Débogage</th></tr></thead>
+      <tbody>
+        <tr><td>Déclenche défaillances / constate défauts</td><td>Trouve & élimine la cause</td></tr>
+        <tr><td>Activité de <strong>test</strong></td><td>Activité de <strong>développement</strong></td></tr>
+      </tbody>
+    </table>
+    <p style="font-size:0.9rem"><strong>Débogage :</strong> Reproduction → Diagnostic (cause racine) → Correction. Puis <strong>test de confirmation</strong> (le correctif marche ?) + <strong>test de régression</strong> (rien cassé ailleurs).</p>
+  </section>
+
+  <!-- 1.2 -->
+  <section class="bloc" id="s2">
+    <h2><span class="num">1.2</span> Pourquoi tester ?</h2>
+
+    <h3>Test vs Assurance qualité (K1)</h3>
+    <table>
+      <thead><tr><th></th><th>Test (= Contrôle qualité)</th><th>Assurance qualité</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Approche</strong></td><td>Corrective</td><td>Préventive</td></tr>
+        <tr><td><strong>Focus</strong></td><td>Produit</td><td>Processus</td></tr>
+        <tr><td><strong>Responsable</strong></td><td>Équipe test</td><td><strong>Tous</strong></td></tr>
+      </tbody>
+    </table>
+    <div class="box piege">« Test » et « Assurance qualité » ne sont <strong>pas synonymes</strong>. Le test est une forme de contrôle qualité.</div>
+
+    <h3>Erreurs, défauts, défaillances, causes racine (K2 ★)</h3>
+    <div class="chaine">
+      <div class="maillon"><b>Cause racine</b><span>raison fondamentale</span></div>
+      <div class="fleche">→</div>
+      <div class="maillon"><b>Erreur</b><span>acte humain</span></div>
+      <div class="fleche">→</div>
+      <div class="maillon"><b>Défaut</b><span>faute/bogue</span></div>
+      <div class="fleche">→</div>
+      <div class="maillon"><b>Défaillance</b><span>comportement erroné</span></div>
+    </div>
+    <div class="box piege"><div class="t">⚠️ À retenir</div>
+    <ul style="margin-bottom:0">
+      <li>Un défaut ne provoque <strong>pas toujours</strong> une défaillance.</li>
+      <li>Les défaillances peuvent venir de l'<strong>environnement</strong> (radiations, champs EM), pas que des humains.</li>
+      <li><strong>Analyse des causes racines</strong> = pour éviter la récurrence.</li>
+    </ul></div>
+  </section>
+
+  <!-- 1.3 -->
+  <section class="bloc" id="s3">
+    <h2><span class="num">1.3</span> Les 7 principes du test (K2 ★ par cœur)</h2>
+    <div class="principes">
+      <div class="principe p1"><span class="pn">1</span><h4>Présence, pas absence</h4><p>Le test montre des défauts <strong>présents</strong>, jamais leur <strong>absence</strong>.</p></div>
+      <div class="principe p2"><span class="pn">2</span><h4>Exhaustif impossible</h4><p>Tout tester = impossible. Prioriser via techniques + risques.</p></div>
+      <div class="principe p3"><span class="pn">3</span><h4>Tester tôt = économiser</h4><p>Plus tôt on trouve un défaut, moins il coûte. Shift-left.</p></div>
+      <div class="principe p4"><span class="pn">4</span><h4>Regroupement</h4><p>Quelques composants concentrent la plupart des défauts (Pareto).</p></div>
+      <div class="principe p5"><span class="pn">5</span><h4>Usure des tests</h4><p>Répéter = inefficace. Sauf régression automatisée.</p></div>
+      <div class="principe p6"><span class="pn">6</span><h4>Dépend du contexte</h4><p>Pas d'approche universelle.</p></div>
+      <div class="principe p7"><span class="pn">7</span><h4>Illusion 0 défaut</h4><p>Corriger tous les défauts ≠ succès. Il faut aussi <strong>valider</strong>.</p></div>
+    </div>
+    <div class="box piege" style="margin-top:14px"><div class="t">⚠️ Nuance d'examen : principe 1 vs 7</div>
+    <strong>1</strong> = on ne prouve pas l'<em>absence</em> de défauts. <strong>7</strong> = même sans défaut, on peut rater les <em>besoins</em> utilisateurs.</div>
+  </section>
+
+  <!-- 1.4 -->
+  <section class="bloc" id="s4">
+    <h2><span class="num">1.4</span> Activités, testware & rôles</h2>
+
+    <h3>Le processus de test (K2) — souvent en parallèle/itératif</h3>
+    <div class="tl">
+      <div class="etape"><div class="past">1</div><div class="ct"><b>Planification</b><p>Objectifs + approche selon contraintes.</p></div></div>
+      <div class="etape"><div class="past">2</div><div class="ct"><b>Pilotage & contrôle</b><p>Pilotage = avancée vs plan. Contrôle = actions correctives.</p></div></div>
+      <div class="etape"><div class="past">3</div><div class="ct"><b>Analyse</b><p>Base de test → conditions de test priorisées.</p><span class="q">« Que tester ? »</span></div></div>
+      <div class="etape"><div class="past">4</div><div class="ct"><b>Conception</b><p>Conditions → cas de test + couverture + données/env.</p><span class="q">« Comment tester ? »</span></div></div>
+      <div class="etape"><div class="past">5</div><div class="ct"><b>Implémentation</b><p>Procédures, scripts, suites, environnement.</p></div></div>
+      <div class="etape"><div class="past">6</div><div class="ct"><b>Exécution</b><p>Réel vs attendu, logs, analyse des anomalies.</p></div></div>
+      <div class="etape"><div class="past">7</div><div class="ct"><b>Clôture</b><p>Archivage, leçons apprises, rapport d'achèvement.</p></div></div>
+    </div>
+
+    <h3>Contexte (K2) — facteurs qui impactent le test</h3>
+    <p style="font-size:0.9rem">Parties prenantes · Membres de l'équipe · Domaine métier · Facteurs techniques · Contraintes projet · Organisation · SDLC · Outils.</p>
+
+    <h3>Testware (K2) — exemples par activité</h3>
+    <table>
+      <thead><tr><th>Activité</th><th>Testware</th></tr></thead>
+      <tbody>
+        <tr><td>Planification</td><td>Plan, calendrier, risques, critères de sortie</td></tr>
+        <tr><td>Analyse</td><td>Conditions de test, rapports de défauts</td></tr>
+        <tr><td>Conception</td><td>Cas de test, chartes, couverture</td></tr>
+        <tr><td>Implémentation</td><td>Procédures, scripts auto, données, env.</td></tr>
+        <tr><td>Exécution</td><td>Logs, rapports de défaut</td></tr>
+        <tr><td>Clôture</td><td>Rapport de clôture, leçons apprises</td></tr>
+      </tbody>
+    </table>
+
+    <h3>Traçabilité (K2)</h3>
+    <p style="font-size:0.9rem">Base de test ↔ testware ↔ résultats ↔ défauts. Sert à : évaluer la <strong>couverture</strong>, le <strong>risque résiduel</strong>, l'<strong>impact des changements</strong>, les audits.</p>
+
+    <h3>Les 2 rôles (K2)</h3>
+    <table>
+      <thead><tr><th>Test Manager</th><th>Testeur</th></tr></thead>
+      <tbody>
+        <tr><td>Responsabilité <strong>globale</strong> (processus, équipe)</td><td>Aspect <strong>technique</strong></td></tr>
+        <tr><td>Planification, pilotage, contrôle, <strong>clôture</strong></td><td>Analyse, conception, implémentation, <strong>exécution</strong></td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- 1.5 -->
+  <section class="bloc" id="s5">
+    <h2><span class="num">1.5</span> Compétences & bonnes pratiques</h2>
+
+    <h3>Compétences génériques (K2)</h3>
+    <ul>
+      <li>Connaissance test · Rigueur/curiosité · Communication · Esprit analytique/critique</li>
+      <li>Connaissances techniques · Connaissance du domaine</li>
+    </ul>
+    <div class="box memo"><strong>Efficacité</strong> = bonnes techniques (bien choisir). <strong>Efficience</strong> = outils/automatisation (économiser les ressources).</div>
+    <div class="box piege">Le testeur = porteur de mauvaises nouvelles → communiquer les défauts de façon <strong>constructive</strong> (méfier du biais de confirmation).</div>
+
+    <h3>Équipe intégrée (K1) — issue de XP</h3>
+    <ul>
+      <li>Tout membre compétent peut faire toute tâche · <strong>Chacun responsable de la qualité</strong></li>
+      <li>Espace partagé · meilleure communication & synergie</li>
+      <li><strong>Mais</strong> pas toujours adapté (ex. critiques pour la sécurité → indépendance requise)</li>
+    </ul>
+
+    <h3>Indépendance du test (K2)</h3>
+    <table>
+      <thead><tr><th>Niveau</th><th>Qui teste ?</th></tr></thead>
+      <tbody>
+        <tr><td>Aucune</td><td>L'auteur lui-même</td></tr>
+        <tr><td>Un peu</td><td>Pairs, même équipe</td></tr>
+        <tr><td>Élevée</td><td>Testeurs hors équipe, dans l'org.</td></tr>
+        <tr><td>Très élevée</td><td>Testeurs hors organisation</td></tr>
+      </tbody>
+    </table>
+    <table>
+      <thead><tr><th>Avantages ✅</th><th>Inconvénients ❌</th></tr></thead>
+      <tbody>
+        <tr><td>Autres perspectives → autres défauts</td><td>Isolement, manque de collaboration</td></tr>
+        <tr><td>Conteste les hypothèses</td><td>Devs perdent le sens qualité</td></tr>
+        <tr><td>—</td><td>Goulot d'étranglement / bouc émissaire des retards</td></tr>
+      </tbody>
+    </table>
+    <div class="box memo">L'indépendance <strong>ne remplace pas la proximité</strong> : les devs trouvent aussi efficacement des défauts dans leur code.</div>
+  </section>
+
+  <!-- PAGER INTER-CHAPITRES -->
+  <div class="chap-pager">
+    <a href="index.html">
+      <div class="dir">← Sommaire</div>
+      <div class="titre">Tous les chapitres</div>
+    </a>
+    <a href="ISTQB_Chapitre2_SDLC.html" class="suivant">
+      <div class="dir">Chapitre suivant →</div>
+      <div class="titre">Ch.2 — Tests dans le SDLC</div>
+    </a>
+  </div>
+
+</main>
+
+<footer>
+  Mémo · <strong>ISTQB Certified Tester — Niveau Fondation v4.0</strong> · Chap.1 (p.16–26)<br>
+  À utiliser avec le syllabus officiel. Bonne révision ! 🚀
+</footer>
+
+<script>
+const flashcards = [
+  { q: "Test", r: "Ensemble d'activités pour découvrir les défauts et évaluer la qualité des artefacts (objets de test)." },
+  { q: "Objet de test", r: "Artefact testé (exigences, code, système…)." },
+  { q: "Débogage", r: "Activité de DÉVELOPPEMENT qui trouve & corrige la cause d'une défaillance." },
+  { q: "Vérification", r: "« Construire le produit correctement » → conformité aux exigences spécifiées." },
+  { q: "Validation", r: "« Construire le bon produit » → conformité aux besoins utilisateurs." },
+  { q: "Qualité", r: "Niveau auquel un système répond aux exigences et besoins des parties prenantes." },
+  { q: "Assurance qualité", r: "Approche PRÉVENTIVE, axée processus. Responsabilité de TOUS les acteurs." },
+  { q: "Cause racine", r: "Raison fondamentale d'un problème (qui conduit à une erreur)." },
+  { q: "Erreur", r: "Acte humain qui produit un défaut (pression, fatigue, complexité…)." },
+  { q: "Défaut", r: "Faute/bogue dans un artefact (code, doc). Peut entraîner une défaillance." },
+  { q: "Défaillance", r: "Le système ne fait pas ce qu'il devrait à l'exécution." },
+  { q: "Couverture", r: "Degré auquel les critères de couverture sont satisfaits (ex: exigences couvertes)." },
+  { q: "Base de test", r: "Corps de connaissances servant de source pour analysis/conception (exigences, specs…)." },
+  { q: "Condition de test", r: "Caractéristique testable dérivée de la base de test (issue de l'analyse)." },
+  { q: "Cas de test", r: "Ensemble d'entrées, conditions d'exécution et résultats attendus (issue de la conception)." },
+  { q: "Procédure de test", r: "Séquence d'exécution des cas de test." },
+  { q: "Données de test", r: "Données nécessaires pour exécuter les tests." },
+  { q: "Résultat de test", r: "Résultat observé vs attendu (capturé pendant l'exécution)." },
+  { q: "Objectif de test", r: "But à atteindre (trouver défauts, évaluer la qualité, etc.)." },
+  { q: "Testware", r: "Produits d'activités de test (plans, cas, scripts, logs…) gérés par config." },
+  { q: "Planification des tests", r: "Définir les objectifs du test + l'approche selon les contraintes." },
+  { q: "Pilotage des tests", r: "Vérifier en continu l'avancée réelle vs le plan." },
+  { q: "Contrôle des tests", r: "Prendre les mesures pour atteindre les objectifs du test." },
+  { q: "Analyse de test", r: "« Que tester ? » → conditions de test priorisées." },
+  { q: "Conception des tests", r: "« Comment tester ? » → cas de test, couverture." },
+  { q: "Implémentation des tests", r: "Créer le testware (procédures, scripts, données, env.)." },
+  { q: "Exécution des tests", r: "Exécuter selon le calendrier, comparer réel vs attendu." },
+  { q: "Clôture des tests", r: "Aux jalons : archivage, leçons apprises, rapport d'achèvement." },
+];
+const fc = document.getElementById('flashcards');
+flashcards.forEach(c => {
+  const d = document.createElement('div');
+  d.className = 'flashcard';
+  d.innerHTML = `<div class="fc-inner">
+    <div class="fc-face fc-recto"><div class="label">Terme</div><div class="question">${c.q}</div></div>
+    <div class="fc-face fc-verso"><div class="label" style="font-size:0.66rem;color:var(--gris);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Définition</div><div class="reponse">${c.r}</div></div>
+  </div>
+  <div class="fc-indice">clique pour retourner</div>`;
+  d.addEventListener('click', () => d.classList.toggle('retournee'));
+  fc.appendChild(d);
+});
+</script>
+
+</body>
+</html>

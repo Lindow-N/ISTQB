@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ISTQB — Chap.3 Mémo · Test statique</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bleu-fonce: #1e3a5f; --bleu: #2d6a9f; --bleu-clair: #e7f1fb;
+    --turquoise: #0d9488; --turquoise-clair: #ccfbf1;
+    --orange: #ea7317; --rouge: #dc2626; --rouge-clair: #fee2e2;
+    --vert: #16a34a; --vert-clair: #dcfce7;
+    --violet: #7c3aed; --violet-clair: #ede9fe;
+    --jaune: #ca8a04; --jaune-clair: #fef9c3;
+    --gris-fonce: #1f2937; --gris: #4b5563; --gris-clair: #f3f4f6;
+    --gris-bord: #e5e7eb; --fond: #f8fafc;
+    --ombre: 0 4px 20px rgba(30,58,95,0.08);
+  }
+
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, 'Helvetica Neue', sans-serif;
+    color: var(--gris-fonce); background: var(--fond);
+    line-height: 1.5; font-size: 15.5px;
+  }
+  html { scroll-behavior: smooth; }
+
+  /* ===== BARRE INTER-CHAPITRES ===== */
+  .chap-nav {
+    background: var(--bleu-fonce); color: #fff; padding: 9px 14px;
+    display: flex; gap: 6px; justify-content: center; flex-wrap: wrap;
+    font-size: 0.8rem; align-items: center;
+  }
+  .chap-nav a {
+    color: rgba(255,255,255,0.65); text-decoration: none; padding: 4px 10px;
+    border-radius: 20px; font-weight: 600; transition: all 0.2s; white-space: nowrap;
+  }
+  .chap-nav a:hover { background: rgba(255,255,255,0.12); color: #fff; }
+  .chap-nav a.actif { background: var(--turquoise); color: #fff; }
+  .chap-nav .sep { color: rgba(255,255,255,0.3); }
+
+  /* ===== HERO ===== */
+  .hero {
+    background: linear-gradient(135deg, #1e3a5f, #2d6a9f 55%, #0d9488);
+    color: #fff; padding: 38px 20px 42px; text-align: center;
+  }
+  .hero .badge {
+    display: inline-block; background: rgba(255,255,255,0.18);
+    padding: 5px 16px; border-radius: 50px; font-size: 0.78rem; font-weight: 600;
+    letter-spacing: 1px; margin-bottom: 12px; border: 1px solid rgba(255,255,255,0.25);
+  }
+  .hero h1 { font-size: clamp(1.6rem,4.5vw,2.4rem); font-weight: 800; margin-bottom: 6px; }
+  .hero p { font-size: 0.96rem; opacity: 0.95; max-width: 600px; margin: 0 auto; }
+  .hero .meta { margin-top: 14px; display:flex; gap:10px; justify-content:center; flex-wrap:wrap; }
+  .hero .meta span {
+    background: rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.2);
+    padding: 5px 13px; border-radius: 30px; font-size: 0.8rem; font-weight: 600;
+  }
+
+  /* ===== NAV SECTIONS ===== */
+  nav.sticky {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(255,255,255,0.93); backdrop-filter: blur(10px);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.06); border-bottom: 1px solid var(--gris-bord);
+    padding: 9px 14px; display:flex; gap:6px; justify-content:center; flex-wrap:wrap;
+  }
+  nav.sticky a {
+    color: var(--gris); text-decoration: none; font-size: 0.82rem; font-weight: 600;
+    padding: 5px 12px; border-radius: 20px; transition: all 0.2s; white-space: nowrap;
+  }
+  nav.sticky a:hover { background: var(--bleu-clair); color: var(--bleu-fonce); }
+  nav.sticky a.home { background: var(--bleu-fonce); color: #fff; }
+  nav.sticky a.home:hover { background: var(--turquoise); }
+
+  /* ===== LAYOUT ===== */
+  .container { max-width: 940px; margin: 0 auto; padding: 32px 20px 50px; }
+
+  section.bloc {
+    background: #fff; border-radius: 14px; padding: 28px;
+    margin-bottom: 24px; box-shadow: var(--ombre); border: 1px solid var(--gris-bord);
+    scroll-margin-top: 64px;
+  }
+  section.bloc h2 {
+    font-size: 1.4rem; color: var(--bleu-fonce); margin-bottom: 14px;
+    display:flex; align-items:center; gap:11px; font-weight: 800;
+  }
+  section.bloc h2 .num {
+    background: linear-gradient(135deg, var(--bleu), var(--turquoise));
+    color:#fff; width:38px; height:38px; border-radius:11px;
+    display:inline-flex; align-items:center; justify-content:center;
+    font-size:1rem; flex-shrink:0;
+  }
+  section.bloc h3 {
+    color: var(--bleu); font-size:1.05rem; margin: 18px 0 7px; font-weight:700;
+    padding-left: 10px; border-left: 4px solid var(--turquoise);
+  }
+  section.bloc strong { color: var(--bleu-fonce); }
+  section.bloc ul { margin: 6px 0 10px; list-style:none; }
+  section.bloc ul li { position:relative; padding-left:22px; margin-bottom:5px; }
+  section.bloc ul li::before {
+    content:"▸"; position:absolute; left:4px; color:var(--turquoise); font-weight:bold;
+  }
+
+  /* ===== BOÎTES ===== */
+  .box { border-radius:11px; padding:13px 18px; margin:12px 0; border-left:5px solid; font-size:0.92rem; }
+  .box .t { font-weight:800; margin-bottom:4px; display:flex; align-items:center; gap:7px; }
+  .piege { background:var(--rouge-clair); border-color:var(--rouge); color:#7f1d1d; }
+  .piege .t { color:var(--rouge); }
+  .memo { background:var(--violet-clair); border-color:var(--violet); color:#4c1d95; }
+  .memo .t { color:var(--violet); }
+  .def { background:var(--bleu-clair); border-color:var(--bleu); color:#1e3a5f; }
+  .def .t { color:var(--bleu-fonce); }
+
+  /* ===== TABLEAUX ===== */
+  table { width:100%; border-collapse:separate; border-spacing:0; margin:12px 0; font-size:0.86rem;
+          overflow:hidden; border-radius:11px; box-shadow:var(--ombre); }
+  thead th { background:var(--bleu-fonce); color:#fff; padding:10px 12px; text-align:left; font-weight:700; }
+  tbody td { padding:9px 12px; border-bottom:1px solid var(--gris-bord); vertical-align:top; }
+  tbody tr:nth-child(even) { background:var(--gris-clair); }
+  tbody tr:last-child td { border-bottom:none; }
+
+  /* ===== FLASHCARDS ===== */
+  .flashcards { display:grid; grid-template-columns:repeat(auto-fill,minmax(230px,1fr)); gap:13px; margin-top:14px; perspective:1000px; }
+  .flashcard { height:140px; cursor:pointer; }
+  .fc-inner { position:relative; width:100%; height:100%; transition:transform 0.6s; transform-style:preserve-3d; }
+  .flashcard.retournee .fc-inner { transform:rotateY(180deg); }
+  .fc-face { position:absolute; inset:0; backface-visibility:hidden; border-radius:11px; padding:15px; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; box-shadow:var(--ombre); }
+  .fc-recto { background:linear-gradient(135deg,var(--bleu),var(--bleu-fonce)); color:#fff; }
+  .fc-verso { background:#fff; color:var(--gris-fonce); transform:rotateY(180deg); border:2px solid var(--bleu-clair); }
+  .fc-recto .label { font-size:0.66rem; text-transform:uppercase; letter-spacing:1px; opacity:0.8; margin-bottom:4px; }
+  .fc-recto .question { font-weight:700; font-size:0.95rem; }
+  .fc-verso .reponse { font-size:0.84rem; }
+  .fc-indice { font-size:0.68rem; color:var(--gris); margin-top:6px; font-style:italic; text-align:center; }
+
+  /* ===== TYPES DE REVUES (cards) ===== */
+  .revues { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:13px; margin-top:14px; }
+  .rev { border-radius:13px; padding:16px; color:#fff; position:relative; overflow:hidden; box-shadow:var(--ombre); }
+  .rev .rn { font-size:2rem; position:absolute; top:8px; right:12px; opacity:0.4; }
+  .rev h4 { color:#fff; font-size:0.98rem; margin-bottom:6px; }
+  .rev p { font-size:0.82rem; opacity:0.96; }
+  .rev .formalite { display:inline-block; background:rgba(255,255,255,0.25); font-size:0.7rem; padding:2px 8px; border-radius:20px; margin-top:8px; font-weight:700; }
+  .r1{background:linear-gradient(135deg,#64748b,#94a3b8);} .r2{background:linear-gradient(135deg,#0d9488,#14b8a6);}
+  .r3{background:linear-gradient(135deg,#ea7317,#f59e0b);} .r4{background:linear-gradient(135deg,#dc2626,#ef4444);}
+
+  /* ===== RÔLES ===== */
+  .roles { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:11px; margin-top:12px; }
+  .role { background:var(--gris-clair); border-radius:11px; padding:13px; border-left:4px solid var(--turquoise); }
+  .role b { color:var(--bleu-fonce); font-size:0.9rem; }
+  .role p { font-size:0.82rem; margin-top:3px; color:var(--gris); }
+
+  /* ===== PAGER ===== */
+  .chap-pager { display:flex; justify-content:space-between; gap:13px; margin: 30px 0 0; }
+  .chap-pager a { flex:1; background:#fff; border:2px solid var(--gris-bord); border-radius:13px; padding:16px 20px; text-decoration:none; color:inherit; transition:all 0.2s; }
+  .chap-pager a:hover { border-color:var(--bleu); box-shadow:var(--ombre); }
+  .chap-pager .dir { font-size:0.76rem; color:var(--gris); font-weight:600; text-transform:uppercase; letter-spacing:0.5px; }
+  .chap-pager .titre { font-weight:700; color:var(--bleu-fonce); font-size:0.95rem; margin-top:3px; }
+  .chap-pager a.suivant { text-align:right; }
+  .chap-pager a.disabled { opacity:0.5; pointer-events:none; }
+
+  footer { text-align:center; padding:24px 18px; color:var(--gris); font-size:0.82rem; border-top:1px solid var(--gris-bord); }
+  footer strong { color:var(--bleu-fonce); }
+
+  @media (max-width:640px) {
+    section.bloc { padding:20px 16px; }
+    .hero { padding:30px 16px; }
+    nav.sticky a { font-size:0.76rem; padding:4px 9px; }
+    .chap-nav a { font-size:0.74rem; padding:3px 8px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- BARRE INTER-CHAPITRES -->
+<div class="chap-nav">
+  <a href="index.html">🏠 Sommaire</a>
+  <span class="sep">·</span>
+  <a href="ISTQB_Chapitre1_Fondamentaux.html">Ch.1</a>
+  <a href="ISTQB_Chapitre2_SDLC.html">Ch.2</a>
+  <a href="#" class="actif">Ch.3</a>
+  <a href="ISTQB_Chapitre4_Techniques.html">Ch.4</a>
+  <a href="ISTQB_Chapitre5_Gestion.html">Ch.5</a>
+  <a href="ISTQB_Chapitre6_Outils.html">Ch.6</a>
+</div>
+
+<header class="hero">
+  <span class="badge">ISTQB · Niveau Fondation v4.0</span>
+  <h1>Chapitre 3 — Test statique</h1>
+  <p>Mémo express : test statique vs dynamique, valeur, processus de revue, types de revues, rôles & facteurs de réussite.</p>
+  <div class="meta">
+    <span>⏱️ 80 min</span><span>📄 p.36–42</span><span>🎯 3 questions / 40</span>
+  </div>
+</header>
+
+<nav class="sticky">
+  <a href="index.html" class="home">🏠 Sommaire</a>
+  <a href="#mots">Mots-clés</a>
+  <a href="#s1">3.1 Bases</a>
+  <a href="#s2">3.2 Processus de revue</a>
+</nav>
+
+<main class="container">
+
+  <!-- MOTS-CLÉS EN FLASHCARDS -->
+  <section class="bloc" id="mots">
+    <h2><span class="num">🔑</span> Mots-clés en flashcards</h2>
+    <p>Termes officiels du syllabus. <strong>Clique sur une carte</strong> pour voir la définition.</p>
+    <div class="flashcards" id="flashcards"></div>
+  </section>
+
+  <!-- 3.1 -->
+  <section class="bloc" id="s1">
+    <h2><span class="num">3.1</span> Bases du test statique</h2>
+
+    <div class="box def"><div class="t">📖 Définition</div>
+    Le <strong>test statique</strong> <strong>n'exécute pas</strong> le logiciel. On évalue le code, l'architecture, les specs… par <strong>revue manuelle</strong> ou <strong>analyse statique</strong> (outils).</div>
+
+    <h3>FL-3.1.1 — Produits examinables (K1)</h3>
+    <p>Presque tous les produits d'activités peuvent être revus :</p>
+    <ul>
+      <li>Spécifications d'exigences · Code source · Plans & cas de test</li>
+      <li>Éléments du product backlog · Chartes de test</li>
+      <li>Documentation projet · Contrats · Modèles</li>
+    </ul>
+    <div class="box piege"><div class="t">⚠️ Nuance importante</div>
+    <ul style="margin-bottom:0">
+      <li><strong>Revue</strong> : tout produit lisible & compréhensible.</li>
+      <li><strong>Analyse statique</strong> : nécessite une <strong>structure</strong> (modèles, code, texte avec syntaxe formelle).</li>
+      <li><strong>Inadapté</strong> : code exécutable tiers (raisons juridiques) difficile à interpréter par des humains.</li>
+    </ul></div>
+
+    <h3>FL-3.1.2 — Valeur du test statique (K2)</h3>
+    <ul>
+      <li>Détecte les défauts <strong>tôt</strong> (test précoce, §1.3).</li>
+      <li>Trouve des défauts <strong>impossibles par test dynamique</strong> : code inaccessible, canevas de conception non implémentés, défauts dans produits non exécutables.</li>
+      <li>Évalue la qualité & construit la confiance.</li>
+      <li>Permet aux parties prenantes de valider leurs besoins réels (vérification des exigences).</li>
+      <li>Améliore la <strong>communication</strong> et la compréhension entre parties prenantes.</li>
+    </ul>
+    <div class="box memo">Les revues peuvent être coûteuses, mais le <strong>coût global du projet est bien moindre</strong> (moins de corrections tardives). L'analyse statique = plus efficiente que le test dynamique pour les défauts de code.</div>
+
+    <h3>FL-3.1.3 — Statique vs Dynamique (K2)</h3>
+    <table>
+      <thead><tr><th>Test statique</th><th>Test dynamique</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Constate directement</strong> les défauts</td><td><strong>Provoque</strong> des défaillances → défauts déduits par analyse</td></tr>
+        <tr><td>S'applique aux produits <strong>non exécutables</strong> (exigences, modèles)</td><td>Produits <strong>exécutables</strong> uniquement</td></tr>
+        <tr><td>Trouve les défauts sur chemins <strong>rarement exécutés</strong></td><td>—</td></tr>
+        <tr><td>Mesure qualité <strong>sans exécution</strong> (maintenabilité)</td><td>Mesure qualité <strong>avec exécution</strong> (performance)</td></tr>
+      </tbody>
+    </table>
+    <div class="box memo">Ils sont <strong>complémentaires</strong>. Certains défauts ne se trouvent QUE par l'un ou l'autre.</div>
+
+    <h4>Défauts typiques plus faciles à trouver en statique</h4>
+    <ul>
+      <li><strong>Exigences</strong> : incohérences, ambiguïtés, contradictions, omissions, duplications.</li>
+      <li><strong>Conception</strong> : structures de DB inefficaces, modularité insuffisante.</li>
+      <li><strong>Codage</strong> : variables non définies/non déclarées, code inaccessible/dupliqué, complexité excessive.</li>
+      <li><strong>Écarts aux standards</strong> (conventions de nommage).</li>
+      <li><strong>Spécifications d'interface</strong> incorrectes (nb, type, ordre des paramètres).</li>
+      <li><strong>Vulnérabilités sécurité</strong> (débordements de mémoire tampon).</li>
+      <li><strong>Lacunes dans la couverture</strong> de la base de test.</li>
+    </ul>
+  </section>
+
+  <!-- 3.2 -->
+  <section class="bloc" id="s2">
+    <h2><span class="num">3.2</span> Processus de feedback et de revue</h2>
+
+    <h3>FL-3.2.1 — Bénéfices du feedback précoce & fréquent (K1)</h3>
+    <ul>
+      <li>Communique <strong>rapidement</strong> les problèmes de qualité potentiels.</li>
+      <li>Évite que le produit ne corresponde pas à la vision des parties prenantes.</li>
+      <li>Évite les malentendus sur les exigences → changements compris & mis en œuvre plus tôt.</li>
+      <li>L'équipe se concentre sur les caractéristiques à <strong>plus forte valeur</strong>.</li>
+    </ul>
+    <div class="box piege">Peu d'implication des parties prenantes → rectifications coûteuses, délais non respectés, reproches, voire <strong>échec total du projet</strong>.</div>
+
+    <h3>FL-3.2.2 — Activités du processus de revue (K2)</h3>
+    <p>Cadre défini par le standard <strong>ISO/IEC 20246</strong>. Plus la revue est formelle, plus il y a de tâches.</p>
+    <table>
+      <thead><tr><th>Étape</th><th>Objectif</th></tr></thead>
+      <tbody>
+        <tr><td><strong>1. Planification</strong></td><td>Définir périmètre, objectif, produit examiné, critères de sortie, effort, délais.</td></tr>
+        <tr><td><strong>2. Lancement de la revue</strong></td><td>S'assurer que chacun est prêt (accès, rôle, responsabilités, infos nécessaires).</td></tr>
+        <tr><td><strong>3. Revue individuelle</strong></td><td>Chaque réviseur évalue la qualité, identifie anomalies/recommandations/questions (checklists, scénarios).</td></tr>
+        <tr><td><strong>4. Communication & analyse</strong></td><td>Anomalies analysées/discutées (≠ forcément défauts). Décision sur statut, responsable, actions. Souvent en réunion de revue.</td></tr>
+        <tr><td><strong>5. Correction & rapport</strong></td><td>Rapport de défaut pour suivi. Acceptation si critères de sortie atteints. Rapport des résultats.</td></tr>
+      </tbody>
+    </table>
+    <div class="box memo"><div class="t">🧠 À retenir</div>
+    Une <strong>anomalie n'est pas forcément un défaut</strong> : elle doit être analysée/discutée avant décision.</div>
+
+    <h3>FL-3.2.3 — Rôles & responsabilités (K1)</h3>
+    <div class="roles">
+      <div class="role"><b>Manager</b><p>Décide ce qui est revu, fournit les ressources (personnel, temps).</p></div>
+      <div class="role"><b>Auteur</b><p>Crée et <strong>corrige</strong> le produit d'activités revu.</p></div>
+      <div class="role"><b>Modérateur (facilitateur)</b><p>Déroulement efficace des réunions : médiation, gestion du temps, cadre sûr.</p></div>
+      <div class="role"><b>Scribe (rapporteur)</b><p>Rassemble les anomalies, enregistre décisions & nouvelles anomalies.</p></div>
+      <div class="role"><b>Réviseur</b><p>Effectue les revues (membre projet, expert métier, partie prenante).</p></div>
+      <div class="role"><b>Responsable de revue</b><p>Responsabilité globale : qui est impliqué, lieu, date.</p></div>
+    </div>
+    <div class="box piege">Lors des <strong>inspections</strong>, l'auteur <strong>ne peut pas</strong> être réviseur ni scribe.</div>
+
+    <h3>FL-3.2.4 — Types de revues (K2)</h3>
+    <p>Le niveau de formalité dépend du SDLC, maturité, criticité, complexité, exigences légales/réglementaires, audits.</p>
+    <div class="revues">
+      <div class="rev r1"><span class="rn">📄</span><h4>Revue informelle</h4><p>Pas de processus défini, pas de résultat formel documenté. Objectif : détecter des anomalies.</p><span class="formalite">Moins formelle</span></div>
+      <div class="rev r2"><span class="rn">👥</span><h4>Relecture technique</h4><p>Ménée par <strong>l'auteur</strong>. Évaluer qualité, consensus, nouvelles idées, formation, motivation.</p><span class="formalite">Auteur</span></div>
+      <div class="rev r3"><span class="rn">🔧</span><h4>Revue technique</h4><p>Réviseurs qualifiés, dirigée par un <strong>modérateur</strong>. Consensus & décisions techniques + anomalies.</p><span class="formalite">Modérateur</span></div>
+      <div class="rev r4"><span class="rn">🔍</span><h4>Inspection</h4><p>Le <strong>plus formel</strong>. Processus complet. Objectif : MAX d'anomalies. Métriques collectées. Auteur ≠ réviseur/scribe.</p><span class="formalite">Plus formelle</span></div>
+    </div>
+    <div class="box memo">Le <strong>même produit</strong> peut être revu avec différents types (ex : d'abord informelle, puis formelle). Le choix dépend des objectifs, besoins du projet, risques, culture d'entreprise.</div>
+
+    <h3>FL-3.2.5 — Facteurs de réussite des revues (K1)</h3>
+    <ul>
+      <li>Objectifs clairs & critères de sortie mesurables. <strong>L'évaluation des participants ne doit jamais être un objectif.</strong></li>
+      <li>Choisir le type de revue approprié (objectifs, produit, participants, contexte).</li>
+      <li>Revues en <strong>petits groupes</strong> (éviter la déconcentration).</li>
+      <li>Feedback fourni aux parties prenantes & auteurs.</li>
+      <li><strong>Temps suffisant</strong> pour la préparation.</li>
+      <li><strong>Soutien du management</strong> au processus de revue.</li>
+      <li>Intégrer les revues dans la <strong>culture de l'organisation</strong> (apprentissage, amélioration).</li>
+      <li><strong>Formation adéquate</strong> à tous les participants.</li>
+      <li><strong>FACILITER</strong> les réunions.</li>
+    </ul>
+    <div class="box piege">« Évaluer les participants » = <strong>JAMAIS</strong> un objectif de revue. Question piège classique.</div>
+  </section>
+
+  <!-- PAGER INTER-CHAPITRES -->
+  <div class="chap-pager">
+    <a href="ISTQB_Chapitre2_SDLC.html">
+      <div class="dir">← Précédent</div>
+      <div class="titre">Ch.2 — Tests dans le SDLC</div>
+    </a>
+    <a href="ISTQB_Chapitre4_Techniques.html" class="suivant">
+      <div class="dir">Chapitre suivant →</div>
+      <div class="titre">Ch.4 — Techniques de test</div>
+    </a>
+  </div>
+
+</main>
+
+<footer>
+  Mémo · <strong>ISTQB Certified Tester — Niveau Fondation v4.0</strong> · Chap.3 (p.36–42)<br>
+  À utiliser avec le syllabus officiel. Bonne révision ! 🚀
+</footer>
+
+<script>
+const flashcards = [
+  { q: "Test statique", r: "Évalue le code, l'architecture, les specs… SANS exécuter le logiciel (revues manuelles ou analyse statique)." },
+  { q: "Test dynamique", r: "Exécute le logiciel pour provoquer des défaillances (défauts déduits par analyse)." },
+  { q: "Analyse statique", r: "Évalue les produits d'activités via des OUTILS (structure requise : code, modèles, syntaxe formelle)." },
+  { q: "Revue", r: "Examen manuel d'un produit d'activités. Tout produit lisible & compréhensible peut être revu." },
+  { q: "Anomalie", r: "Écart identifié lors d'une revue. ⚠️ N'est PAS forcément un défaut : doit être analysée/discutée." },
+  { q: "Revue informelle", r: "Pas de processus défini, pas de résultat formel. Objectif : détecter des anomalies." },
+  { q: "Relecture technique", r: "Menée par l'AUTEUR. Évaluer qualité, consensus, idées, formation, motivation." },
+  { q: "Revue technique", r: "Réviseurs qualifiés + MODÉRATEUR. Consensus & décisions techniques + anomalies." },
+  { q: "Inspection", r: "Type le PLUS FORMEL. Processus complet. Objectif : MAX d'anomalies. Métriques. Auteur ≠ réviseur/scribe." },
+  { q: "Revue formelle", r: "Niveau de formalité élevé (ex : inspection) : processus complet, rôles définis, métriques." },
+  { q: "Modérateur (facilitateur)", r: "Assure le déroulement efficace des réunions : médiation, temps, cadre sûr." },
+  { q: "Scribe (rapporteur)", r: "Rassemble les anomalies, enregistre les décisions & nouvelles anomalies." },
+  { q: "Responsable de revue", r: "Responsabilité globale : qui est impliqué, lieu, date de la revue." },
+  { q: "Revue individuelle", r: "Étape du processus : chaque réviseur évalue seul (checklists, scénarios) → anomalies." },
+  { q: "Communication & analyse", r: "Étape : anomalies discutées/analyticsées, décision sur statut & actions (souvent en réunion)." },
+];
+const fc = document.getElementById('flashcards');
+flashcards.forEach(c => {
+  const d = document.createElement('div');
+  d.className = 'flashcard';
+  d.innerHTML = `<div class="fc-inner">
+    <div class="fc-face fc-recto"><div class="label">Terme</div><div class="question">${c.q}</div></div>
+    <div class="fc-face fc-verso"><div class="label" style="font-size:0.66rem;color:var(--gris);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Définition</div><div class="reponse">${c.r}</div></div>
+  </div>
+  <div class="fc-indice">clique pour retourner</div>`;
+  d.addEventListener('click', () => d.classList.toggle('retournee'));
+  fc.appendChild(d);
+});
+</script>
+
+</body>
+</html>

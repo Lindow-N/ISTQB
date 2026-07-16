@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ISTQB — Chap.5 Mémo · Gestion des activités de test</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bleu-fonce: #1e3a5f; --bleu: #2d6a9f; --bleu-clair: #e7f1fb;
+    --turquoise: #0d9488; --turquoise-clair: #ccfbf1;
+    --orange: #ea7317; --rouge: #dc2626; --rouge-clair: #fee2e2;
+    --vert: #16a34a; --vert-clair: #dcfce7;
+    --violet: #7c3aed; --violet-clair: #ede9fe;
+    --jaune: #ca8a04; --jaune-clair: #fef9c3;
+    --gris-fonce: #1f2937; --gris: #4b5563; --gris-clair: #f3f4f6;
+    --gris-bord: #e5e7eb; --fond: #f8fafc;
+    --ombre: 0 4px 20px rgba(30,58,95,0.08);
+  }
+
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, 'Helvetica Neue', sans-serif;
+    color: var(--gris-fonce); background: var(--fond);
+    line-height: 1.5; font-size: 15.5px;
+  }
+  html { scroll-behavior: smooth; }
+
+  .chap-nav { background: var(--bleu-fonce); color: #fff; padding: 9px 14px; display: flex; gap: 6px; justify-content: center; flex-wrap: wrap; font-size: 0.8rem; align-items: center; }
+  .chap-nav a { color: rgba(255,255,255,0.65); text-decoration: none; padding: 4px 10px; border-radius: 20px; font-weight: 600; transition: all 0.2s; white-space: nowrap; }
+  .chap-nav a:hover { background: rgba(255,255,255,0.12); color: #fff; }
+  .chap-nav a.actif { background: var(--turquoise); color: #fff; }
+  .chap-nav .sep { color: rgba(255,255,255,0.3); }
+
+  .hero { background: linear-gradient(135deg, #1e3a5f, #2d6a9f 55%, #0d9488); color: #fff; padding: 38px 20px 42px; text-align: center; }
+  .hero .badge { display: inline-block; background: rgba(255,255,255,0.18); padding: 5px 16px; border-radius: 50px; font-size: 0.78rem; font-weight: 600; letter-spacing: 1px; margin-bottom: 12px; border: 1px solid rgba(255,255,255,0.25); }
+  .hero h1 { font-size: clamp(1.6rem,4.5vw,2.4rem); font-weight: 800; margin-bottom: 6px; }
+  .hero p { font-size: 0.96rem; opacity: 0.95; max-width: 620px; margin: 0 auto; }
+  .hero .meta { margin-top: 14px; display:flex; gap:10px; justify-content:center; flex-wrap:wrap; }
+  .hero .meta span { background: rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.2); padding: 5px 13px; border-radius: 30px; font-size: 0.8rem; font-weight: 600; }
+
+  nav.sticky { position: sticky; top: 0; z-index: 100; background: rgba(255,255,255,0.93); backdrop-filter: blur(10px); box-shadow: 0 2px 10px rgba(0,0,0,0.06); border-bottom: 1px solid var(--gris-bord); padding: 9px 14px; display:flex; gap:6px; justify-content:center; flex-wrap:wrap; }
+  nav.sticky a { color: var(--gris); text-decoration: none; font-size: 0.82rem; font-weight: 600; padding: 5px 12px; border-radius: 20px; transition: all 0.2s; white-space: nowrap; }
+  nav.sticky a:hover { background: var(--bleu-clair); color: var(--bleu-fonce); }
+  nav.sticky a.home { background: var(--bleu-fonce); color: #fff; }
+  nav.sticky a.home:hover { background: var(--turquoise); }
+
+  .container { max-width: 940px; margin: 0 auto; padding: 32px 20px 50px; }
+
+  section.bloc { background: #fff; border-radius: 14px; padding: 28px; margin-bottom: 24px; box-shadow: var(--ombre); border: 1px solid var(--gris-bord); scroll-margin-top: 64px; }
+  section.bloc h2 { font-size: 1.4rem; color: var(--bleu-fonce); margin-bottom: 14px; display:flex; align-items:center; gap:11px; font-weight: 800; }
+  section.bloc h2 .num { background: linear-gradient(135deg, var(--bleu), var(--turquoise)); color:#fff; width:38px; height:38px; border-radius:11px; display:inline-flex; align-items:center; justify-content:center; font-size:1rem; flex-shrink:0; }
+  section.bloc h3 { color: var(--bleu); font-size:1.05rem; margin: 18px 0 7px; font-weight:700; padding-left: 10px; border-left: 4px solid var(--turquoise); }
+  section.bloc strong { color: var(--bleu-fonce); }
+  section.bloc ul { margin: 6px 0 10px; list-style:none; }
+  section.bloc ul li { position:relative; padding-left:22px; margin-bottom:5px; }
+  section.bloc ul li::before { content:"▸"; position:absolute; left:4px; color:var(--turquoise); font-weight:bold; }
+
+  .box { border-radius:11px; padding:13px 18px; margin:12px 0; border-left:5px solid; font-size:0.92rem; }
+  .box .t { font-weight:800; margin-bottom:4px; display:flex; align-items:center; gap:7px; }
+  .piege { background:var(--rouge-clair); border-color:var(--rouge); color:#7f1d1d; }
+  .piege .t { color:var(--rouge); }
+  .memo { background:var(--violet-clair); border-color:var(--violet); color:#4c1d95; }
+  .memo .t { color:var(--violet); }
+  .def { background:var(--bleu-clair); border-color:var(--bleu); color:#1e3a5f; }
+  .def .t { color:var(--bleu-fonce); }
+  .exemple { background:var(--vert-clair); border-color:var(--vert); color:#14532d; }
+  .exemple .t { color:var(--vert); }
+
+  table { width:100%; border-collapse:separate; border-spacing:0; margin:12px 0; font-size:0.84rem; overflow:hidden; border-radius:11px; box-shadow:var(--ombre); }
+  thead th { background:var(--bleu-fonce); color:#fff; padding:9px 11px; text-align:left; font-weight:700; }
+  tbody td { padding:8px 11px; border-bottom:1px solid var(--gris-bord); vertical-align:top; }
+  tbody tr:nth-child(even) { background:var(--gris-clair); }
+  tbody tr:last-child td { border-bottom:none; }
+
+  .flashcards { display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:13px; margin-top:14px; perspective:1000px; }
+  .flashcard { height:135px; cursor:pointer; }
+  .fc-inner { position:relative; width:100%; height:100%; transition:transform 0.6s; transform-style:preserve-3d; }
+  .flashcard.retournee .fc-inner { transform:rotateY(180deg); }
+  .fc-face { position:absolute; inset:0; backface-visibility:hidden; border-radius:11px; padding:14px; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; box-shadow:var(--ombre); }
+  .fc-recto { background:linear-gradient(135deg,var(--bleu),var(--bleu-fonce)); color:#fff; }
+  .fc-verso { background:#fff; color:var(--gris-fonce); transform:rotateY(180deg); border:2px solid var(--bleu-clair); }
+  .fc-recto .label { font-size:0.64rem; text-transform:uppercase; letter-spacing:1px; opacity:0.8; margin-bottom:4px; }
+  .fc-recto .question { font-weight:700; font-size:0.92rem; }
+  .fc-verso .reponse { font-size:0.82rem; }
+  .fc-indice { font-size:0.66rem; color:var(--gris); margin-top:6px; font-style:italic; text-align:center; }
+
+  .quadrants { display:grid; grid-template-columns:1fr 1fr; gap:13px; margin:12px 0; }
+  @media (max-width:600px){ .quadrants{ grid-template-columns:1fr; } }
+  .quad { border-radius:12px; padding:14px; border:2px solid; }
+  .quad h4 { margin-bottom:5px; font-size:0.92rem; }
+  .quad p { font-size:0.82rem; }
+  .quad.q1 { background:#dbeafe; border-color:#3b82f6; } .quad.q1 h4 { color:#1e40af; }
+  .quad.q2 { background:#dcfce7; border-color:#22c55e; } .quad.q2 h4 { color:#166534; }
+  .quad.q3 { background:#fef9c3; border-color:#eab308; } .quad.q3 h4 { color:#854d0e; }
+  .quad.q4 { background:#fce7f3; border-color:#ec4899; } .quad.q4 h4 { color:#9d174d; }
+
+  .pyramide-wrap { display:flex; gap:20px; align-items:center; flex-wrap:wrap; margin:14px 0; }
+  .pyramide { position:relative; width:240px; height:150px; flex-shrink:0; }
+  .pyr-layer { position:absolute; left:50%; transform:translateX(-50%); display:flex; align-items:center; justify-content:center; color:#fff; font-weight:700; font-size:0.78rem; text-align:center; }
+  .pyr-top { top:0; width:60px; height:45px; background:var(--rouge); clip-path:polygon(50% 0, 100% 100%, 0 100%); border-radius:0; padding-top:25px; }
+  .pyr-mid { top:48px; width:140px; height:50px; background:var(--orange); clip-path:polygon(15% 0, 85% 0, 100% 100%, 0 100%); }
+  .pyr-bot { top:98px; width:240px; height:52px; background:var(--vert); clip-path:polygon(12% 0, 88% 0, 100% 100%, 0 100%); }
+
+  .chap-pager { display:flex; justify-content:space-between; gap:13px; margin: 30px 0 0; }
+  .chap-pager a { flex:1; background:#fff; border:2px solid var(--gris-bord); border-radius:13px; padding:16px 20px; text-decoration:none; color:inherit; transition:all 0.2s; }
+  .chap-pager a:hover { border-color:var(--bleu); box-shadow:var(--ombre); }
+  .chap-pager .dir { font-size:0.76rem; color:var(--gris); font-weight:600; text-transform:uppercase; letter-spacing:0.5px; }
+  .chap-pager .titre { font-weight:700; color:var(--bleu-fonce); font-size:0.95rem; margin-top:3px; }
+  .chap-pager a.suivant { text-align:right; }
+
+  footer { text-align:center; padding:24px 18px; color:var(--gris); font-size:0.82rem; border-top:1px solid var(--gris-bord); }
+  footer strong { color:var(--bleu-fonce); }
+
+  @media (max-width:640px) { section.bloc { padding:20px 16px; } .hero { padding:30px 16px; } nav.sticky a { font-size:0.74rem; padding:4px 8px; } .chap-nav a { font-size:0.72rem; padding:3px 7px; } }
+</style>
+</head>
+<body>
+
+<div class="chap-nav">
+  <a href="index.html">🏠 Sommaire</a>
+  <span class="sep">·</span>
+  <a href="ISTQB_Chapitre1_Fondamentaux.html">Ch.1</a>
+  <a href="ISTQB_Chapitre2_SDLC.html">Ch.2</a>
+  <a href="ISTQB_Chapitre3_TestStatique.html">Ch.3</a>
+  <a href="ISTQB_Chapitre4_Techniques.html">Ch.4</a>
+  <a href="#" class="actif">Ch.5</a>
+  <a href="ISTQB_Chapitre6_Outils.html">Ch.6</a>
+</div>
+
+<header class="hero">
+  <span class="badge">ISTQB · Niveau Fondation v4.0</span>
+  <h1>Chapitre 5 — Gestion des activités de test</h1>
+  <p>Planification, risques, pilotage/contrôle/clôture, gestion de configuration, gestion des défauts.</p>
+  <div class="meta">
+    <span>⏱️ 335 min</span><span>📄 p.54–66</span><span>🎯 12 questions / 40</span>
+  </div>
+</header>
+
+<nav class="sticky">
+  <a href="index.html" class="home">🏠 Sommaire</a>
+  <a href="#mots">Mots-clés</a>
+  <a href="#s1">5.1 Planification</a>
+  <a href="#s2">5.2 Risques</a>
+  <a href="#s3">5.3 Pilotage/Contrôle</a>
+  <a href="#s4">5.4 Config</a>
+  <a href="#s5">5.5 Défauts</a>
+</nav>
+
+<main class="container">
+
+  <section class="bloc" id="mots">
+    <h2><span class="num">🔑</span> Mots-clés en flashcards</h2>
+    <p>Termes officiels du syllabus. <strong>Clique sur une carte</strong> pour voir la définition.</p>
+    <div class="flashcards" id="flashcards"></div>
+  </section>
+
+  <!-- 5.1 -->
+  <section class="bloc" id="s1">
+    <h2><span class="num">5.1</span> Planification des tests</h2>
+
+    <h3>FL-5.1.1 — Plan de test (K2)</h3>
+    <p>Décrit les <strong>objectifs, ressources et processus</strong> d'un projet de test. Documente moyens & calendrier, garantit la conformité aux critères, sert de communication.</p>
+    <p><strong>Contenu typique :</strong> contexte du test · hypothèses/contraintes · parties prenantes (rôles) · communication · référentiel des risques · approche de test (niveaux, types, techniques, critères d'entrée/sortie) · budget & calendrier.</p>
+
+    <h3>FL-5.1.2 — Contribution du testeur aux itérations/releases (K1)</h3>
+    <table>
+      <thead><tr><th>Planification de release</th><th>Planification d'itération</th></tr></thead>
+      <tbody>
+        <tr><td>Livraison du produit, définit le product backlog</td><td>Backlog de l'itération, se projette en fin d'itération</td></tr>
+        <tr><td>US testables & critères d'acceptation, analyse des risques, estimation effort, approche de test</td><td>Analyse détaillée des risques des US, testabilité, décomposition en tâches, aspects fonctionnels/non-fonctionnels</td></tr>
+      </tbody>
+    </table>
+
+    <h3>FL-5.1.3 — Critères d'entrée vs sortie (K2)</h3>
+    <table>
+      <thead><tr><th>Critères d'entrée</th><th>Critères de sortie</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Préconditions</strong> pour entreprendre une activité</td><td>Ce qui doit être réalisé pour <strong>déclarer achevé</strong></td></tr>
+        <tr><td>Disponibilité ressources (personnel, outils, env, données, budget)</td><td>Mesures d'exhaustivité (couverture, défauts non résolus, densité)</td></tr>
+        <tr><td>Matériel de test (base de test, exigences testables, cas de test)</td><td>Critères de clôture (tests planifiés exécutés, défauts signalés)</td></tr>
+        <tr><td>Niveau de qualité initial (smoke tests passés)</td><td>—</td></tr>
+      </tbody>
+    </table>
+    <div class="box memo"><strong>Épuisement du temps/budget</strong> = critère de sortie valable (si risque accepté par parties prenantes).<br>
+    <strong>Agile :</strong> critères de sortie = <strong>Definition of Done</strong> · critères d'entrée = <strong>Definition of Ready</strong>.</div>
+
+    <h3>FL-5.1.4 — Techniques d'estimation (K3 ★)</h3>
+    <table>
+      <thead><tr><th>Technique</th><th>Type</th><th>Principe</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Basée sur ratios</strong></td><td>Métriques</td><td>Ratios issus de projets antérieurs (ex: dev:test = 3:2)</td></tr>
+        <tr><td><strong>Extrapolation</strong></td><td>Métriques</td><td>Modèle mathématique sur données en cours (idéal itératif)</td></tr>
+        <tr><td><strong>Delphi large bande</strong></td><td>Expertise</td><td>Experts isolés → itératif jusqu'à consensus. <em>Planning poker</em> = variante</td></tr>
+        <tr><td><strong>3 points</strong></td><td>Expertise</td><td>Optimiste (a), probable (m), pessimiste (b)</td></tr>
+      </tbody>
+    </table>
+    <div class="box exemple"><div class="t">✏️ Formule 3 points (K3)</div>
+    <strong>E = (a + 4m + b) / 6</strong> &nbsp;&nbsp; <strong>SD = (b − a) / 6</strong><br>
+    Ex : a=6, m=9, b=18 → E = (6+36+18)/6 = <strong>10 ± 2</strong> personnes-heures</div>
+
+    <h3>FL-5.1.5 — Priorisation des cas de test (K3 ★)</h3>
+    <table>
+      <thead><tr><th>Stratégie</th><th>Basée sur</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Risques</strong></td><td>Cas couvrant les risques les + importants en premier</td></tr>
+        <tr><td><strong>Couverture</strong></td><td>Couverture la + élevée en premier (+ variante « additionnelle »)</td></tr>
+        <tr><td><strong>Exigences</strong></td><td>Priorité des exigences (définie par parties prenantes)</td></tr>
+      </tbody>
+    </table>
+    <div class="box piege">Si un cas <strong>dépend</strong> d'un autre de priorité moindre → le moins prioritaire doit s'exécuter <strong>en premier</strong>. Tenir compte de la disponibilité des ressources.</div>
+
+    <h3>FL-5.1.6 — Pyramide des tests (K1)</h3>
+    <div class="pyramide-wrap">
+      <div class="pyramide">
+        <div class="pyr-layer pyr-top">Bout-en-bout</div>
+        <div class="pyr-layer pyr-mid">Intégration</div>
+        <div class="pyr-layer pyr-bot">Unitaires</div>
+      </div>
+      <div>
+        <p style="font-size:0.86rem">Plus la couche est <strong>élevée</strong> :</p>
+        <ul>
+          <li>Moins détaillée (tests peu détaillés)</li>
+          <li>Moins isolée (couvre plusieurs fonctionnalités)</li>
+          <li>Temps d'exécution <strong>plus long</strong></li>
+        </ul>
+        <p style="font-size:0.86rem">Couche inférieure = <strong>petits, isolés, rapides</strong>, nombreux. Couche supérieure = <strong>complexes, lent, peu nombreux</strong>.</p>
+      </div>
+    </div>
+
+    <h3>FL-5.1.7 — Quadrants de tests (K2)</h3>
+    <p>Combinaison de 2 axes : <strong>orienté métier vs technologie</strong> · <strong>soutien à l'équipe vs critique du produit</strong>.</p>
+    <div class="quadrants">
+      <div class="quad q1"><h4>Q1 · Techno + Soutien</h4><p>Composants & intégration composants. <strong>Automatisés</strong>, intégration continue.</p></div>
+      <div class="quad q2"><h4>Q2 · Métier + Soutien</h4><p>Fonctionnels, exemples, US, UX, API. Vérifient critères d'acceptation. Manuel ou auto.</p></div>
+      <div class="quad q3"><h4>Q3 · Métier + Critique</h4><p>Exploratoires, utilisabilité, UAT. Orientés utilisateur, souvent <strong>manuels</strong>.</p></div>
+      <div class="quad q4"><h4>Q4 · Techno + Critique</h4><p>Smoke tests & non-fonctionnels (sauf utilisabilité). Souvent <strong>automatisés</strong>.</p></div>
+    </div>
+  </section>
+
+  <!-- 5.2 -->
+  <section class="bloc" id="s2">
+    <h2><span class="num">5.2</span> Gestion des risques</h2>
+
+    <p>Gestion des risques = <strong>Analyse</strong> (identification + évaluation) + <strong>Contrôle</strong> (atténuation + surveillance).</p>
+
+    <h3>FL-5.2.1 — Niveau de risque (K1)</h3>
+    <div class="box def"><strong>Niveau de risque = Probabilité × Impact</strong><br>
+    Probabilité (0 &lt; p &lt; 1) que le risque se produise × Impact (conséquences/préjudice).</div>
+
+    <h3>FL-5.2.2 — Risques projet vs produit (K2)</h3>
+    <table>
+      <thead><tr><th>Risques projet</th><th>Risques produit</th></tr></thead>
+      <tbody>
+        <tr><td>Lien avec <strong>gestion & contrôle</strong> du projet</td><td>Lien avec <strong>caractéristiques-qualité</strong> (ISO 25010)</td></tr>
+        <tr><td>Organisationnels, humains, techniques, fournisseurs</td><td>Fonctionnalités manquantes/incorrectes, calculs erronés, architecture médiocre, vulnérabilités</td></tr>
+        <tr><td>Impact : calendrier, budget, périmètre</td><td>Impact : insatisfaction, perte revenus/réputation, dommages, sanctions, blessures</td></tr>
+      </tbody>
+    </table>
+
+    <h3>FL-5.2.3 — Analyse des risques produit (K2)</h3>
+    <p>Objectif : <strong>conscience du risque</strong> pour concentrer l'effort et minimiser le risque résiduel. Commence <strong>tôt</strong>.</p>
+    <ul>
+      <li><strong>Identification</strong> : liste exhaustive (brainstorming, ateliers, entretiens, diagrammes cause-effet).</li>
+      <li><strong>Évaluation</strong> : catégoriser, déterminer probabilité/impact/niveau, prioriser.</li>
+      <li>Approche <strong>quantitative</strong> (P×I) ou <strong>qualitative</strong> (matrice de risque).</li>
+    </ul>
+    <p><strong>Influence sur les tests :</strong> périmètre · niveaux/types · techniques & couverture · effort · priorisation · activités de réduction.</p>
+
+    <h3>FL-5.2.4 — Contrôle des risques produit (K2)</h3>
+    <p>Réponses possibles : <strong>atténuation</strong> (tests), <strong>acceptation</strong>, <strong>transfert</strong>, <strong>plan d'urgence</strong>.</p>
+    <p>Mesures d'atténuation par les tests :</p>
+    <ul>
+      <li>Testeurs avec le bon niveau d'expérience/compétences.</li>
+      <li>Niveau d'indépendance approprié.</li>
+      <li>Revues & analyses statiques.</li>
+      <li>Techniques & couverture appropriées, types de test adaptés.</li>
+      <li>Tests dynamiques, y compris régression.</li>
+    </ul>
+    <div class="box memo"><strong>Test basé sur les risques</strong> = approche où les activités sont sélectionnées, priorisées et gérées sur la base de l'analyse & du contrôle des risques.</div>
+  </section>
+
+  <!-- 5.3 -->
+  <section class="bloc" id="s3">
+    <h2><span class="num">5.3</span> Pilotage, contrôle & clôture</h2>
+
+    <table>
+      <thead><tr><th>Pilotage des tests</th><th>Contrôle des tests</th><th>Clôture des tests</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Collecte d'informations</strong> sur les tests</td><td>Utilise le pilotage pour <strong>actions correctives</strong></td><td><strong>Consolide</strong> données, expérience, testware</td></tr>
+        <tr><td>Évalue l'avancement & critères de sortie</td><td>Directives : reprioriser, ajuster calendrier, ajouter ressources</td><td>Aux jalons (fin niveau, itération, livraison)</td></tr>
+      </tbody>
+    </table>
+
+    <h3>FL-5.3.1 — Métriques de test (K1)</h3>
+    <ul>
+      <li><strong>Avancement projet</strong> (clôture tâches, ressources, effort)</li>
+      <li><strong>Avancement tests</strong> (cas exécutés/non, réussis/échecs, durée)</li>
+      <li><strong>Qualité produit</strong> (disponibilité, temps de réponse, MTTF)</li>
+      <li><strong>Défauts</strong> (trouvés/corrigés, densité, % détection)</li>
+      <li><strong>Risque</strong> (risque résiduel) · <strong>Couverture</strong> (exigences, code) · <strong>Coût</strong></li>
+    </ul>
+
+    <h3>FL-5.3.2 — Rapports de test (K2)</h3>
+    <table>
+      <thead><tr><th>Rapport d'avancement (régulier)</th><th>Rapport de clôture (fin d'étape)</th></tr></thead>
+      <tbody>
+        <tr><td>Période, progression (avance/retard), obstacles, métriques, risques nouveaux, tests prévus</td><td>Résumé, évaluation qualité vs plan, écarts, obstacles, métriques, risques non atténués, leçons apprises</td></tr>
+      </tbody>
+    </table>
+    <div class="box memo">Destinaires différents → formalité & fréquence varient. Équipe = fréquent/informel ; projet clôturé = modèle préétabli, unique.</div>
+
+    <h3>FL-5.3.3 — Communication de l'avancement (K2)</h3>
+    <p>Verbale · Tableaux de bord (burn-down charts, tableaux de tâches) · Canaux électroniques (mail, chat) · Doc en ligne · Rapports formels. À adapter selon parties prenantes (équipes distribuées = plus formelle).</p>
+  </section>
+
+  <!-- 5.4 -->
+  <section class="bloc" id="s4">
+    <h2><span class="num">5.4</span> Gestion de configuration</h2>
+
+    <h3>FL-5.4.1 — Soutien aux tests (K2)</h3>
+    <p>Discipline qui <strong>identifie, contrôle et suit</strong> les produits d'activités (plans, stratégies, cas, scripts, résultats, logs, rapports) en tant qu'<strong>éléments de configuration</strong>.</p>
+    <ul>
+      <li>Élément approuvé pour les tests → devient une <strong>base de référence</strong> (modifiable seulement via contrôle des modifications).</li>
+      <li>Conserve un enregistrement des modifications → permet de <strong>revenir à une base antérieure</strong> pour reproduire les résultats.</li>
+      <li>Garantit : identification unique, contrôle par version, traçabilité.</li>
+    </ul>
+    <div class="box memo">Dans DevOps, la <strong>gestion de configuration automatisée</strong> est intégrée au pipeline CI/CD.</div>
+  </section>
+
+  <!-- 5.5 -->
+  <section class="bloc" id="s5">
+    <h2><span class="num">5.5</span> Gestion des défauts</h2>
+
+    <h3>FL-5.5.1 — Rapport de défaut (K3 ★)</h3>
+    <p>Processus : workflow de traitement des anomalies (de découverte à clôture) + règles de classification. Les anomalies peuvent être de vrais défauts, des faux positifs ou des demandes de changement.</p>
+    <p><strong>Objectifs :</strong> infos suffisantes pour résoudre · suivi qualité produit · idées d'amélioration des processus.</p>
+    <div class="box def"><div class="t">📋 Contenu d'un rapport de défaut (K3 — à connaître !)</div>
+    <ul style="margin-bottom:0">
+      <li><strong>Identifiant unique</strong></li>
+      <li>Titre & bref résumé</li>
+      <li>Date, organisation émettrice, auteur & rôle</li>
+      <li>Identification de l'objet de test & environnement</li>
+      <li>Contexte (cas de test, activité, phase SDLC, technique utilisée)</li>
+      <li><strong>Description de la défaillance</strong> (étapes pour reproduire, logs, captures)</li>
+      <li><strong>Résultats attendus vs résultats réels</strong></li>
+      <li><strong>Sévérité</strong> (impact) & <strong>priorité</strong> de correction</li>
+      <li>Statut (ouvert, différé, dupliqué, en attente, ré-ouvert, fermé, rejeté)</li>
+      <li>Références (au cas de test)</li>
+    </ul></div>
+    <div class="box piege"><strong>Sévérité ≠ Priorité !</strong> Sévérité = degré d'impact technique. Priorité = ordre de correction (métier). Un défaut mineur sur une fonction très visible peut être très prioritaire.</div>
+  </section>
+
+  <div class="chap-pager">
+    <a href="ISTQB_Chapitre4_Techniques.html">
+      <div class="dir">← Précédent</div>
+      <div class="titre">Ch.4 — Techniques de test</div>
+    </a>
+    <a href="ISTQB_Chapitre6_Outils.html" class="suivant">
+      <div class="dir">Chapitre suivant →</div>
+      <div class="titre">Ch.6 — Outils de test</div>
+    </a>
+  </div>
+
+</main>
+
+<footer>
+  Mémo · <strong>ISTQB Certified Tester — Niveau Fondation v4.0</strong> · Chap.5 (p.54–66)<br>
+  À utiliser avec le syllabus officiel. Bonne révision ! 🚀
+</footer>
+
+<script>
+const flashcards = [
+  { q: "Planification des tests", r: "Définit objectifs + approche selon contraintes. Produit le plan de test (moyens, calendrier, approche)." },
+  { q: "Plan de test", r: "Décrit objectifs, ressources & processus. Contenu : contexte, hypothèses, risques, approche, budget." },
+  { q: "Critères d'entrée", r: "PRÉCONDITIONS pour entreprendre une activité (ressources, base de test, qualité initiale)." },
+  { q: "Critères de sortie", r: "Ce qui doit être réalisé pour DÉCLARER ACHEVÉ (couverture, défauts, clôture)." },
+  { q: "Definition of Done", r: "En Agile = critères de sortie. Métriques objectives pour un livrable." },
+  { q: "Definition of Ready", r: "En Agile = critères d'entrée d'une User Story pour démarrer dev/test." },
+  { q: "Estimation ratios", r: "Basée sur métriques : ratios issus de projets antérieurs (ex: dev:test = 3:2)." },
+  { q: "Extrapolation", r: "Métriques : modèle mathématique sur données en cours. Idéal pour itératif." },
+  { q: "Delphi large bande", r: "Expertise : experts isolés, itératif jusqu'à consensus. Planning poker = variante." },
+  { q: "Estimation 3 points", r: "Expertise : E = (a + 4m + b)/6. Optimiste, probable, pessimiste." },
+  { q: "Priorisation (risques)", r: "Cas couvrant les risques les + importants exécutés en premier." },
+  { q: "Priorisation (couverture)", r: "Cas à couverture la + élevée en premier (+ variante additionnelle)." },
+  { q: "Pyramide des tests", r: "Modèle : couches (unitaires bas → bout-en-bout haut). Plus haut = moins détaillé, moins isolé, plus lent." },
+  { q: "Quadrants de tests", r: "Q1 (techno+soutien), Q2 (métier+soutien), Q3 (métier+critique), Q4 (techno+critique)." },
+  { q: "Risque", r: "Événement potentiel à effet négatif. Niveau = Probabilité × Impact." },
+  { q: "Niveau de risque", r: "Mesure du risque = Probabilité (0<p<1) × Impact (préjudice)." },
+  { q: "Risque projet", r: "Lien avec GESTION & CONTRÔLE du projet (organisation, humains, techniques, fournisseurs)." },
+  { q: "Risque produit", r: "Lien avec CARACTÉRISTIQUES-QUALITÉ (ISO 25010) : fonctionnalités, calculs, sécurité…" },
+  { q: "Analyse des risques", r: "Identification (liste exhaustive) + évaluation (catégoriser, probabilité, impact, prioriser)." },
+  { q: "Évaluation des risques", r: "Catégoriser, déterminer niveau (quantitatif P×I ou qualitatif matrice), prioriser." },
+  { q: "Contrôle des risques", r: "Atténuation (actions pour réduire) + surveillance (vérifier efficacité)." },
+  { q: "Atténuation des risques", r: "Mettre en œuvre les actions pour réduire le niveau de risque." },
+  { q: "Tests basés sur les risques", r: "Activités sélectionnées, priorisées et gérées sur base de l'analyse & contrôle des risques." },
+  { q: "Pilotage des tests", r: "COLLECTE d'informations pour évaluer l'avancement & les critères de sortie." },
+  { q: "Contrôle des tests", r: "ACTIONS CORRECTIVES via directives (reprioriser, ajuster, ajouter ressources)." },
+  { q: "Rapport d'avancement", r: "Régulier : période, progression, obstacles, métriques, risques, tests prévus." },
+  { q: "Rapport de clôture", r: "Résumé final : qualité vs plan, écarts, leçons apprises, risques non atténués." },
+  { q: "Gestion de configuration", r: "Identifie, contrôle, suit les produits d'activités. Base de référence = figée." },
+  { q: "Rapport de défaut", r: "Contenu : ID, titre, étapes, attendu vs réel, sévérité, priorité, statut, références." },
+  { q: "Sévérité vs Priorité", r: "Sévérité = impact technique. Priorité = ordre de correction (métier). Pas synonymes !" },
+  { q: "Approche de test", r: "Niveaux, types, techniques, livrables, critères d'entrée/sortie choisis pour un projet." },
+];
+const fc = document.getElementById('flashcards');
+flashcards.forEach(c => {
+  const d = document.createElement('div');
+  d.className = 'flashcard';
+  d.innerHTML = `<div class="fc-inner">
+    <div class="fc-face fc-recto"><div class="label">Terme</div><div class="question">${c.q}</div></div>
+    <div class="fc-face fc-verso"><div class="label" style="font-size:0.64rem;color:var(--gris);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Définition</div><div class="reponse">${c.r}</div></div>
+  </div>
+  <div class="fc-indice">clique pour retourner</div>`;
+  d.addEventListener('click', () => d.classList.toggle('retournee'));
+  fc.appendChild(d);
+});
+</script>
+
+</body>
+</html>

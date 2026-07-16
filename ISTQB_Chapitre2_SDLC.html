@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ISTQB — Chap.2 Mémo · Tests dans le SDLC</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bleu-fonce: #1e3a5f; --bleu: #2d6a9f; --bleu-clair: #e7f1fb;
+    --turquoise: #0d9488; --turquoise-clair: #ccfbf1;
+    --orange: #ea7317; --rouge: #dc2626; --rouge-clair: #fee2e2;
+    --vert: #16a34a; --vert-clair: #dcfce7;
+    --violet: #7c3aed; --violet-clair: #ede9fe;
+    --jaune: #ca8a04; --jaune-clair: #fef9c3;
+    --gris-fonce: #1f2937; --gris: #4b5563; --gris-clair: #f3f4f6;
+    --gris-bord: #e5e7eb; --fond: #f8fafc;
+    --ombre: 0 4px 20px rgba(30,58,95,0.08);
+  }
+
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, 'Helvetica Neue', sans-serif;
+    color: var(--gris-fonce); background: var(--fond);
+    line-height: 1.5; font-size: 15.5px;
+  }
+  html { scroll-behavior: smooth; }
+
+  /* ===== BARRE INTER-CHAPITRES (haut) ===== */
+  .chap-nav {
+    background: var(--bleu-fonce); color: #fff; padding: 9px 14px;
+    display: flex; gap: 6px; justify-content: center; flex-wrap: wrap;
+    font-size: 0.8rem; align-items: center;
+  }
+  .chap-nav a {
+    color: rgba(255,255,255,0.65); text-decoration: none; padding: 4px 10px;
+    border-radius: 20px; font-weight: 600; transition: all 0.2s; white-space: nowrap;
+  }
+  .chap-nav a:hover { background: rgba(255,255,255,0.12); color: #fff; }
+  .chap-nav a.actif { background: var(--turquoise); color: #fff; }
+  .chap-nav a.disabled { opacity: 0.4; cursor: not-allowed; }
+  .chap-nav .sep { color: rgba(255,255,255,0.3); }
+
+  /* ===== HERO ===== */
+  .hero {
+    background: linear-gradient(135deg, #1e3a5f, #2d6a9f 55%, #0d9488);
+    color: #fff; padding: 38px 20px 42px; text-align: center;
+  }
+  .hero .badge {
+    display: inline-block; background: rgba(255,255,255,0.18);
+    padding: 5px 16px; border-radius: 50px; font-size: 0.78rem; font-weight: 600;
+    letter-spacing: 1px; margin-bottom: 12px; border: 1px solid rgba(255,255,255,0.25);
+  }
+  .hero h1 { font-size: clamp(1.6rem,4.5vw,2.4rem); font-weight: 800; margin-bottom: 6px; }
+  .hero p { font-size: 0.96rem; opacity: 0.95; max-width: 600px; margin: 0 auto; }
+  .hero .meta { margin-top: 14px; display:flex; gap:10px; justify-content:center; flex-wrap:wrap; }
+  .hero .meta span {
+    background: rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.2);
+    padding: 5px 13px; border-radius: 30px; font-size: 0.8rem; font-weight: 600;
+  }
+
+  /* ===== NAV SECTIONS ===== */
+  nav.sticky {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(255,255,255,0.93); backdrop-filter: blur(10px);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.06); border-bottom: 1px solid var(--gris-bord);
+    padding: 9px 14px; display:flex; gap:6px; justify-content:center; flex-wrap:wrap;
+  }
+  nav.sticky a {
+    color: var(--gris); text-decoration: none; font-size: 0.82rem; font-weight: 600;
+    padding: 5px 12px; border-radius: 20px; transition: all 0.2s; white-space: nowrap;
+  }
+  nav.sticky a:hover { background: var(--bleu-clair); color: var(--bleu-fonce); }
+  nav.sticky a.home { background: var(--bleu-fonce); color: #fff; }
+  nav.sticky a.home:hover { background: var(--turquoise); }
+
+  /* ===== LAYOUT ===== */
+  .container { max-width: 940px; margin: 0 auto; padding: 32px 20px 50px; }
+
+  section.bloc {
+    background: #fff; border-radius: 14px; padding: 28px;
+    margin-bottom: 24px; box-shadow: var(--ombre); border: 1px solid var(--gris-bord);
+    scroll-margin-top: 64px;
+  }
+  section.bloc h2 {
+    font-size: 1.4rem; color: var(--bleu-fonce); margin-bottom: 14px;
+    display:flex; align-items:center; gap:11px; font-weight: 800;
+  }
+  section.bloc h2 .num {
+    background: linear-gradient(135deg, var(--bleu), var(--turquoise));
+    color:#fff; width:38px; height:38px; border-radius:11px;
+    display:inline-flex; align-items:center; justify-content:center;
+    font-size:1rem; flex-shrink:0;
+  }
+  section.bloc h3 {
+    color: var(--bleu); font-size:1.05rem; margin: 18px 0 7px; font-weight:700;
+    padding-left: 10px; border-left: 4px solid var(--turquoise);
+  }
+  section.bloc strong { color: var(--bleu-fonce); }
+  section.bloc ul { margin: 6px 0 10px; list-style:none; }
+  section.bloc ul li { position:relative; padding-left:22px; margin-bottom:5px; }
+  section.bloc ul li::before {
+    content:"▸"; position:absolute; left:4px; color:var(--turquoise); font-weight:bold;
+  }
+
+  /* ===== BOÎTES ===== */
+  .box { border-radius:11px; padding:13px 18px; margin:12px 0; border-left:5px solid; font-size:0.92rem; }
+  .box .t { font-weight:800; margin-bottom:4px; display:flex; align-items:center; gap:7px; }
+  .piege { background:var(--rouge-clair); border-color:var(--rouge); color:#7f1d1d; }
+  .piege .t { color:var(--rouge); }
+  .memo { background:var(--violet-clair); border-color:var(--violet); color:#4c1d95; }
+  .memo .t { color:var(--violet); }
+  .def { background:var(--bleu-clair); border-color:var(--bleu); color:#1e3a5f; }
+  .def .t { color:var(--bleu-fonce); }
+
+  /* ===== TABLEAUX ===== */
+  table { width:100%; border-collapse:separate; border-spacing:0; margin:12px 0; font-size:0.86rem;
+          overflow:hidden; border-radius:11px; box-shadow:var(--ombre); }
+  thead th { background:var(--bleu-fonce); color:#fff; padding:10px 12px; text-align:left; font-weight:700; }
+  tbody td { padding:9px 12px; border-bottom:1px solid var(--gris-bord); vertical-align:top; }
+  tbody tr:nth-child(even) { background:var(--gris-clair); }
+  tbody tr:last-child td { border-bottom:none; }
+
+  /* ===== MOTS-CLÉS ===== */
+  .cloud { display:flex; flex-wrap:wrap; gap:6px; margin-top:8px; }
+  .cloud span {
+    background:var(--turquoise-clair); color:#115e59; padding:4px 11px;
+    border-radius:30px; font-size:0.8rem; font-weight:600; border:1px solid #5eead4;
+  }
+
+  /* ===== 5 NIVEAUX (cards) ===== */
+  .niveaux { display:grid; grid-template-columns:repeat(auto-fill,minmax(250px,1fr)); gap:13px; margin-top:14px; }
+  .niv { border-radius:13px; padding:16px; color:#fff; position:relative; overflow:hidden; box-shadow:var(--ombre); }
+  .niv .nn { font-size:2.2rem; font-weight:900; opacity:0.3; position:absolute; top:2px; right:10px; line-height:1; }
+  .niv h4 { color:#fff; font-size:0.98rem; margin-bottom:6px; max-width:80%; }
+  .niv p { font-size:0.83rem; opacity:0.96; }
+  .n1{background:linear-gradient(135deg,#1e3a5f,#2d6a9f);} .n2{background:linear-gradient(135deg,#0d9488,#14b8a6);}
+  .n3{background:linear-gradient(135deg,#ea7317,#f59e0b);} .n4{background:linear-gradient(135deg,#7c3aed,#a855f7);}
+  .n5{background:linear-gradient(135deg,#16a34a,#22c55e);}
+
+  /* ===== TYPES (2 colonnes) ===== */
+  .types2 { display:grid; grid-template-columns:1fr 1fr; gap:13px; margin:12px 0; }
+  @media (max-width:600px){ .types2{ grid-template-columns:1fr; } }
+  .type-card { border-radius:12px; padding:16px; border:2px solid; }
+  .type-card.fonc { background:var(--bleu-clair); border-color:var(--bleu); }
+  .type-card.nfonc { background:var(--jaune-clair); border-color:var(--jaune); }
+  .type-card h4 { margin-bottom:6px; font-size:0.96rem; }
+  .type-card.fonc h4 { color:var(--bleu-fonce); }
+  .type-card.nfonc h4 { color:#854d0e; }
+  .type-card p { font-size:0.84rem; }
+
+  /* ===== TIMELINE DEV APPROACHES ===== */
+  .approches { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:11px; margin-top:12px; }
+  .appr { background:var(--gris-clair); border-radius:11px; padding:13px; border-left:4px solid var(--turquoise); }
+  .appr b { color:var(--bleu-fonce); font-size:0.9rem; }
+  .appr p { font-size:0.82rem; margin-top:3px; color:var(--gris); }
+
+  /* ===== FLASHCARDS ===== */
+  .flashcards { display:grid; grid-template-columns:repeat(auto-fill,minmax(230px,1fr)); gap:13px; margin-top:14px; perspective:1000px; }
+  .flashcard { height:140px; cursor:pointer; }
+  .fc-inner { position:relative; width:100%; height:100%; transition:transform 0.6s; transform-style:preserve-3d; }
+  .flashcard.retournee .fc-inner { transform:rotateY(180deg); }
+  .fc-face { position:absolute; inset:0; backface-visibility:hidden; border-radius:11px; padding:15px; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; box-shadow:var(--ombre); }
+  .fc-recto { background:linear-gradient(135deg,var(--bleu),var(--bleu-fonce)); color:#fff; }
+  .fc-verso { background:#fff; color:var(--gris-fonce); transform:rotateY(180deg); border:2px solid var(--bleu-clair); }
+  .fc-recto .label { font-size:0.66rem; text-transform:uppercase; letter-spacing:1px; opacity:0.8; margin-bottom:4px; }
+  .fc-recto .question { font-weight:700; font-size:0.95rem; }
+  .fc-verso .reponse { font-size:0.84rem; }
+  .fc-indice { font-size:0.68rem; color:var(--gris); margin-top:6px; font-style:italic; text-align:center; }
+
+  /* ===== NAV BAS DE PAGE ===== */
+  .chap-pager {
+    display:flex; justify-content:space-between; gap:13px; margin: 30px 0 0;
+  }
+  .chap-pager a {
+    flex:1; background:#fff; border:2px solid var(--gris-bord); border-radius:13px;
+    padding:16px 20px; text-decoration:none; color:inherit; transition:all 0.2s;
+  }
+  .chap-pager a:hover { border-color:var(--bleu); box-shadow:var(--ombre); }
+  .chap-pager .dir { font-size:0.76rem; color:var(--gris); font-weight:600; text-transform:uppercase; letter-spacing:0.5px; }
+  .chap-pager .titre { font-weight:700; color:var(--bleu-fonce); font-size:0.95rem; margin-top:3px; }
+  .chap-pager a.suivant { text-align:right; }
+  .chap-pager a.disabled { opacity:0.5; pointer-events:none; }
+
+  footer { text-align:center; padding:24px 18px; color:var(--gris); font-size:0.82rem; border-top:1px solid var(--gris-bord); }
+  footer strong { color:var(--bleu-fonce); }
+
+  @media (max-width:640px) {
+    section.bloc { padding:20px 16px; }
+    .hero { padding:30px 16px; }
+    nav.sticky a { font-size:0.76rem; padding:4px 9px; }
+    .chap-nav a { font-size:0.74rem; padding:3px 8px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- BARRE INTER-CHAPITRES -->
+<div class="chap-nav">
+  <a href="index.html">🏠 Sommaire</a>
+  <span class="sep">·</span>
+  <a href="ISTQB_Chapitre1_Fondamentaux.html">Ch.1</a>
+  <a href="#" class="actif">Ch.2</a>
+  <a href="ISTQB_Chapitre3_TestStatique.html">Ch.3</a>
+  <a href="ISTQB_Chapitre4_Techniques.html">Ch.4</a>
+  <a href="ISTQB_Chapitre5_Gestion.html">Ch.5</a>
+  <a href="ISTQB_Chapitre6_Outils.html">Ch.6</a>
+</div>
+
+<header class="hero">
+  <span class="badge">ISTQB · Niveau Fondation v4.0</span>
+  <h1>Chapitre 2 — Tests dans le SDLC</h1>
+  <p>Mémo express : cycle de vie logiciel, bonnes pratiques, shift-left, niveaux & types de test, maintenance.</p>
+  <div class="meta">
+    <span>⏱️ 130 min</span><span>📄 p.27–35</span><span>🎯 5 questions / 40</span>
+  </div>
+</header>
+
+<nav class="sticky">
+  <a href="index.html" class="home">🏠 Sommaire</a>
+  <a href="#mots">Mots-clés</a>
+  <a href="#s1">2.1 SDLC</a>
+  <a href="#s2">2.2 Niveaux & types</a>
+  <a href="#s3">2.3 Maintenance</a>
+</nav>
+
+<main class="container">
+
+  <!-- MOTS-CLÉS EN FLASHCARDS -->
+  <section class="bloc" id="mots">
+    <h2><span class="num">🔑</span> Mots-clés en flashcards</h2>
+    <p>Termes officiels du syllabus. <strong>Clique sur une carte</strong> pour voir la définition.</p>
+    <div class="flashcards" id="flashcards"></div>
+  </section>
+
+  <!-- 2.1 -->
+  <section class="bloc" id="s1">
+    <h2><span class="num">2.1</span> Tester dans le SDLC</h2>
+
+    <h3>FL-2.1.1 — Impact du SDLC sur le test (K2)</h3>
+    <p>Un <strong>SDLC</strong> = modèle définissant comment les phases de développement sont liées. Le choix du SDLC influe sur :</p>
+    <ul>
+      <li>Périmètre & calendrier des activités de test</li>
+      <li>Niveau de détail de la documentation</li>
+      <li>Choix des techniques & approche de test</li>
+      <li>Degré d'automatisation</li>
+      <li>Rôle & responsabilités du testeur</li>
+    </ul>
+    <table>
+      <thead><tr><th>Modèle</th><th>Impact sur le test</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Séquentiel</strong> (cascade, V)</td><td>Revues d'exigences + analyse/conception tôt. Tests dynamiques tardifs (code à la fin).</td></tr>
+        <tr><td><strong>Itératif/incrémental</strong> (spirale, Processus Unifié)</td><td>Chaque itération = prototype fonctionnel → tests statiques & dynamiques à tous les niveaux. Régression poussée.</td></tr>
+        <tr><td><strong>Agile</strong></td><td>Doc légère, automatisation poussée (régression), tests manuels souvent basés sur l'expérience.</td></tr>
+      </tbody>
+    </table>
+
+    <h3>FL-2.1.2 — Bonnes pratiques (tous SDLC) (K1)</h3>
+    <ul>
+      <li>À chaque activité de dev correspond une activité de <strong>test</strong>.</li>
+      <li>Les niveaux de test ont des objectifs <strong>spécifiques & différents</strong> (éviter redondance).</li>
+      <li>Analyse & conception commencent <strong>dès la phase de dev correspondante</strong> (test précoce).</li>
+      <li>Testeurs impliqués dans les revues dès que des versions préliminaires existent (shift left).</li>
+    </ul>
+
+    <h3>FL-2.1.3 — Développement piloté par les tests (K1)</h3>
+    <div class="approches">
+      <div class="appr"><b>TDD</b><p>Tests écrits <strong>en premier</strong>, puis code pour les satisfaire, puis refactorisation. Dirige le codage.</p></div>
+      <div class="appr"><b>ATDD</b><p>Tests dérivés des <strong>critères d'acceptation</strong>. Tests avant le développement de la fonctionnalité.</p></div>
+      <div class="appr"><b>BDD</b><p>Comportement en langage naturel <strong>Given/When/Then</strong>, traduit en tests exécutables.</p></div>
+    </div>
+    <div class="box memo"><strong>TDD, ATDD, BDD</strong> = approches shift-left (tests avant le code), itératives. Implémentent le principe du test précoce.</div>
+
+    <h3>FL-2.1.4 — DevOps & tests (K2)</h3>
+    <p><strong>DevOps</strong> = dev (dont test) + exploitation travaillent ensemble. Changement culturel. Favorise CI/CD, feedback rapide.</p>
+    <table>
+      <thead><tr><th>Avantages ✅</th><th>Défis / Risques ❌</th></tr></thead>
+      <tbody>
+        <tr><td>Feedback rapide sur la qualité</td><td>Pipeline à définir/établir</td></tr>
+        <tr><td>Shift left (code qualité + analyse statique)</td><td>Outils CI/CD à introduire/maintenir</td></tr>
+        <tr><td>Automatisation CI/CD, env. stables</td><td>Auto des tests difficile à mettre en place</td></tr>
+        <tr><td>Vue sur le non-fonctionnel (perf, fiabilité)</td><td>—</td></tr>
+        <tr><td>Moins de manuel répétitif, moins de régression</td><td>—</td></tr>
+      </tbody>
+    </table>
+    <div class="box piege">DevOps = beaucoup d'automatisation, mais les <strong>tests manuels (surtout point de vue utilisateur) restent nécessaires</strong>.</div>
+
+    <h3>FL-2.1.5 — Shift left (K2)</h3>
+    <p><strong>Shift left</strong> = tester plus tôt dans le SDLC (test précoce, §1.3). <strong>Ne signifie pas</strong> négliger les phases ultérieures !</p>
+    <ul>
+      <li>Examiner la spécification du point de vue des tests (trouve ambiguïtés, incomplétudes).</li>
+      <li>Cas de test <strong>avant</strong> le code + exécution dans un harnais pendant l'implémentation.</li>
+      <li>Intégration continue / développement continu.</li>
+      <li>Tests statiques du code avant les tests dynamiques.</li>
+      <li>Tests non fonctionnels dès le niveau composant si possible.</li>
+    </ul>
+    <div class="box memo">Coût/effort <strong>supérieur au début</strong>, mais économies en fin de processus. Il faut l'<strong>adhésion des parties prenantes</strong>.</div>
+
+    <h3>FL-2.1.6 — Rétrospectives (K2)</h3>
+    <p>À la fin d'un projet/itération/jalon de livraison. Participants : testeurs, devs, architectes, PO, analystes métier.</p>
+    <ul>
+      <li><strong>3 questions :</strong> Succès à conserver ? / Améliorations possibles ? / Comment intégrer ?</li>
+      <li>Résultats enregistrés → partie du <strong>rapport de clôture des tests</strong>.</li>
+      <li>Essentielles pour l'<strong>amélioration continue</strong> (les recommandations doivent être suivies).</li>
+    </ul>
+    <div class="box memo"><div class="t">🧠 Bénéfices pour les tests</div>
+    Efficacité/efficience ↑ · Qualité du testware ↑ · Cohésion d'équipe · Qualité de la base de test ↑ · Coopération dev/test ↑.</div>
+  </section>
+
+  <!-- 2.2 -->
+  <section class="bloc" id="s2">
+    <h2><span class="num">2.2</span> Niveaux & types de test</h2>
+
+    <h3>FL-2.2.1 — Les 5 niveaux de test (K2)</h3>
+    <p>Groupes d'activités organisées et gérées ensemble. Chaque niveau = une instance du processus de test. Distinction par : <em>objet, objectifs, base de test, défauts/défaillances, approche/responsabilités</em>.</p>
+    <div class="niveaux">
+      <div class="niv n1"><span class="nn">1</span><h4>Composants (unitaires)</h4><p>Composants <strong>isolés</strong>. Souvent par les développeurs, dans leur environnement. Harnais/frameworks.</p></div>
+      <div class="niv n2"><span class="nn">2</span><h4>Intégration composants</h4><p><strong>Interfaces & interactions</strong> entre composants. Stratégie : ascendante, descendante, big-bang.</p></div>
+      <div class="niv n3"><span class="nn">3</span><h4>Système</h4><p>Comportement/capacités du système complet. Fonctionnel, bout-en-bout, non fonctionnel. Équipe indépendante.</p></div>
+      <div class="niv n4"><span class="nn">4</span><h4>Intégration système</h4><p>Interfaces avec <strong>systèmes/services externes</strong>. Env. similaire à l'opérationnel.</p></div>
+      <div class="niv n5"><span class="nn">5</span><h4>Acceptation</h4><p>Validation & aptitude au déploiement. Idéalement par les <strong>utilisateurs</strong>. UAT, opérationnelle, contractuelle/réglementaire, alpha, bêta.</p></div>
+    </div>
+
+    <h3>FL-2.2.2 — Les 4 types de test (K2)</h3>
+    <div class="types2">
+      <div class="type-card fonc">
+        <h4>📋 Test fonctionnel</h4>
+        <p>« <strong>Quoi</strong> » (les fonctions). Vérifie complétude, exactitude, adéquation. Basé sur spécifications.</p>
+      </div>
+      <div class="type-card nfonc">
+        <h4>⚙️ Test non fonctionnel</h4>
+        <p>« <strong>Comment</strong> » (comportement). Caractéristiques qualité <strong>ISO 25010</strong> : performance, compatibilité, utilisabilité, fiabilité, sécurité, maintenabilité, portabilité.</p>
+      </div>
+      <div class="type-card fonc">
+        <h4>⬛ Test boîte noire</h4>
+        <p>Basé sur les <strong>spécifications</strong> (doc externe). Vérifie le comportement vs spécifs.</p>
+      </div>
+      <div class="type-card nfonc">
+        <h4>⬜ Test boîte blanche</h4>
+        <p>Basé sur la <strong>structure interne</strong> (code, architecture, flux). Vise la couverture de la structure.</p>
+      </div>
+    </div>
+    <div class="box memo">Les <strong>4 types peuvent s'appliquer à TOUS les niveaux</strong> de test (mais l'accent diffère).</div>
+    <div class="box piege"><div class="t">⚠️ Piège fonctionnel vs non-fonctionnel</div>
+    Un test non fonctionnel peut dériver d'un fonctionnel : <em>même fonction</em>, mais on vérifie une contrainte (ex : s'exécute en moins de 2 s, portable sur une nouvelle plateforme).</div>
+
+    <h3>FL-2.2.3 — Confirmation vs Régression (K2)</h3>
+    <table>
+      <thead><tr><th>Test de confirmation</th><th>Test de régression</th></tr></thead>
+      <tbody>
+        <tr><td>Confirme que le <strong>défaut original</strong> est corrigé</td><td>Confirme <strong>aucune conséquence négative</strong> d'une modif</td></tr>
+        <tr><td>Rejoue les cas qui avaient échoué + nouveaux tests</td><td>Vérifie le composant modifié <strong>ET</strong> les autres, voire d'autres systèmes</td></tr>
+        <tr><td>—</td><td>Commencer par une <strong>analyse d'impact</strong></td></tr>
+        <tr><td>—</td><td>Suites rejouées souvent → <strong>bons candidats à l'automatisation</strong></td></tr>
+      </tbody>
+    </table>
+    <div class="box memo">Confirmation + régression sont nécessaires à <strong>tous les niveaux</strong> si défauts corrigés ou modifications.</div>
+  </section>
+
+  <!-- 2.3 -->
+  <section class="bloc" id="s3">
+    <h2><span class="num">2.3</span> Tests de maintenance</h2>
+
+    <h3>FL-2.3.1 — Tests de maintenance & déclencheurs (K2)</h3>
+    <p>Système en production. Maintenance = corrective, adaptative, perfective. Inclut livraisons planifiées et <strong>correctifs à chaud</strong> (non planifiés).</p>
+    <p><strong>Analyse d'impact</strong> avant modification → décider si on change, au vu des conséquences. Périmètre du test dépend :</p>
+    <ul>
+      <li>Degré de <strong>risque</strong> des changements</li>
+      <li>Taille du système existant</li>
+      <li>Ampleur des modifications</li>
+    </ul>
+    <h4>3 catégories de déclencheurs</h4>
+    <table>
+      <thead><tr><th>Déclencheur</th><th>Exemples</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Modifications</strong></td><td>Améliorations planifiées, correctives, correctifs à chaud</td></tr>
+        <tr><td><strong>Migrations/mises à niveau</strong></td><td>Changement de plateforme, conversion de données</td></tr>
+        <tr><td><strong>Retrait</strong></td><td>Fin de vie → tests d'archivage des données, procédures de restauration/extraction</td></tr>
+      </tbody>
+    </table>
+    <div class="box memo">Test de maintenance = évaluer le <strong>succès des changements</strong> + vérifier les <strong>régressions</strong> dans les parties inchangées.</div>
+  </section>
+
+  <!-- PAGER INTER-CHAPITRES -->
+  <div class="chap-pager">
+    <a href="ISTQB_Chapitre1_Fondamentaux.html">
+      <div class="dir">← Précédent</div>
+      <div class="titre">Ch.1 — Fondamentaux des tests</div>
+    </a>
+    <a href="ISTQB_Chapitre3_TestStatique.html" class="suivant">
+      <div class="dir">Chapitre suivant →</div>
+      <div class="titre">Ch.3 — Test statique</div>
+    </a>
+  </div>
+
+</main>
+
+<footer>
+  Mémo · <strong>ISTQB Certified Tester — Niveau Fondation v4.0</strong> · Chap.2 (p.27–35)<br>
+  À utiliser avec le syllabus officiel. Bonne révision ! 🚀
+</footer>
+
+<script>
+const flashcards = [
+  { q: "Niveau de test", r: "Groupe d'activités de test organisées & gérées ensemble, à un stade de dev donné (composants → système)." },
+  { q: "Type de test", r: "Groupe d'activités liées à des caractéristiques-qualité spécifiques (fonctionnel, non-fonctionnel, boîte noire/blanche)." },
+  { q: "Objet de test", r: "Le composant/système testé à un niveau donné (ex: composant, sous-système, système)." },
+  { q: "Tests de composants", r: "Niveau : composants isolés. Souvent par les devs + harnais/frameworks (= tests unitaires)." },
+  { q: "Tests d'intégration de composants", r: "Niveau : interfaces & interactions entre composants (stratégie ascendante/descendante/big-bang)." },
+  { q: "Tests d'intégration", r: "Vise à tester les interfaces entre composants, sous-systèmes ou systèmes." },
+  { q: "Tests d'intégration de systèmes", r: "Niveau : interfaces entre le système sous test et les systèmes/services externes." },
+  { q: "Tests système", r: "Niveau : comportement & capacités d'un système complet (fonctionnel, bout-en-bout, non-fonctionnel)." },
+  { q: "Tests d'acceptation", r: "Niveau : validation & aptitude au déploiement. Idéalement par les utilisateurs (UAT, alpha, bêta…)." },
+  { q: "Tests fonctionnels", r: "Type : évalue les fonctions (« QUOI »). Vérifie complétude, exactitude, adéquation. Basé sur les spécifications." },
+  { q: "Tests non fonctionnels", r: "Type : évalue les attributs (« COMMENT »). Caractéristiques ISO 25010 (perf, fiabilité, sécurité…)." },
+  { q: "Tests boîte noire", r: "Type : basé sur les spécifications externes → vérifie le comportement vs spécifications." },
+  { q: "Tests boîte blanche", r: "Type : basé sur la structure interne (code, architecture, flux) → vise la couverture de la structure." },
+  { q: "Tests de confirmation", r: "Confirme que le DÉFAUT ORIGINAL est corrigé (rejoue les cas qui avaient échoué)." },
+  { q: "Tests de régression", r: "Confirme qu'une modification n'a causé AUCUNE conséquence négative ailleurs (automatisable)." },
+  { q: "Tests de maintenance", r: "Tests sur un système en production : succès des changements + régressions (déclencheurs)." },
+  { q: "Shift-left", r: "Approche consistant à tester PLUS TÔT dans le SDLC (test précoce), sans négliger les phases ultérieures." },
+];
+const fc = document.getElementById('flashcards');
+flashcards.forEach(c => {
+  const d = document.createElement('div');
+  d.className = 'flashcard';
+  d.innerHTML = `<div class="fc-inner">
+    <div class="fc-face fc-recto"><div class="label">Terme</div><div class="question">${c.q}</div></div>
+    <div class="fc-face fc-verso"><div class="label" style="font-size:0.66rem;color:var(--gris);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Définition</div><div class="reponse">${c.r}</div></div>
+  </div>
+  <div class="fc-indice">clique pour retourner</div>`;
+  d.addEventListener('click', () => d.classList.toggle('retournee'));
+  fc.appendChild(d);
+});
+</script>
+
+</body>
+</html>

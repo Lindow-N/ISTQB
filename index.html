@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ISTQB · Stratégie de révision</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bleu-fonce: #1e3a5f; --bleu: #2d6a9f; --bleu-clair: #e7f1fb;
+    --turquoise: #0d9488; --vert: #16a34a; --vert-clair: #dcfce7;
+    --rouge: #dc2626; --rouge-clair: #fee2e2;
+    --orange: #ea7317; --jaune: #ca8a04; --jaune-clair: #fef9c3;
+    --gris-fonce: #1f2937; --gris: #4b5563; --gris-clair: #f3f4f6;
+    --gris-bord: #e5e7eb; --fond: #f8fafc;
+    --ombre: 0 4px 20px rgba(30,58,95,0.08); --ombre-forte: 0 10px 40px rgba(30,58,95,0.15);
+  }
+  body { font-family: 'Segoe UI', system-ui, -apple-system, 'Helvetica Neue', sans-serif; color: var(--gris-fonce); background: var(--fond); line-height: 1.5; }
+
+  .hero { background: linear-gradient(135deg, #1e3a5f, #2d6a9f 55%, #0d9488); color: #fff; padding: 56px 20px 60px; text-align: center; }
+  .hero .badge { display: inline-block; background: rgba(255,255,255,0.18); padding: 6px 18px; border-radius: 50px; font-size: 0.82rem; font-weight: 600; letter-spacing: 1px; margin-bottom: 16px; border: 1px solid rgba(255,255,255,0.25); }
+  .hero h1 { font-size: clamp(1.9rem,5vw,2.8rem); font-weight: 800; margin-bottom: 8px; }
+  .hero p { font-size: 1rem; opacity: 0.95; max-width: 600px; margin: 0 auto; }
+  .hero .passer { display:inline-block; background:#fff; color:var(--vert); padding:7px 18px; border-radius:30px; font-size:0.9rem; font-weight:800; margin-top:14px; }
+
+  .container { max-width: 920px; margin: 0 auto; padding: 36px 20px 70px; }
+
+  /* ===== Objectif examen ===== */
+  .objectif {
+    background: #fff; border-radius: 14px; padding: 24px 28px; margin-bottom: 24px;
+    box-shadow: var(--ombre); border: 1px solid var(--gris-bord); text-align: center;
+  }
+  .objectif h2 { color: var(--bleu-fonce); font-size: 1.25rem; margin-bottom: 6px; }
+  .objectif .chiffre { font-size: 2.2rem; font-weight: 900; color: var(--vert); line-height: 1; margin: 8px 0; }
+  .objectif .chiffre small { font-size: 1rem; color: var(--gris); font-weight: 600; }
+  .objectif p { color: var(--gris); font-size: 0.92rem; }
+  .barre-exam { height: 18px; background: var(--gris-clair); border-radius: 20px; overflow: hidden; margin: 14px auto 0; max-width: 380px; border: 1px solid var(--gris-bord); position: relative; }
+  .barre-exam .seuil { position:absolute; left:65%; top:0; bottom:0; width:3px; background:var(--rouge); z-index:2; }
+  .barre-exam .seuil::after { content:"65%"; position:absolute; top:-20px; left:50%; transform:translateX(-50%); font-size:0.72rem; font-weight:700; color:var(--rouge); white-space:nowrap; }
+  .barre-exam .fill { height:100%; width:65%; background: linear-gradient(90deg, var(--vert), var(--turquoise)); border-radius: 20px; }
+
+  /* ===== Titre section ===== */
+  .titre-section { display:flex; align-items:center; gap:10px; margin: 28px 0 14px; color: var(--bleu-fonce); font-size: 1.05rem; font-weight: 800; }
+  .titre-section .pastille { width:28px; height:28px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:0.9rem; color:#fff; flex-shrink:0; }
+
+  /* ===== Cartes chapitres ===== */
+  .grille { display: grid; grid-template-columns: 1fr; gap: 14px; }
+  .carte {
+    background: #fff; border-radius: 14px; padding: 18px 20px; border: 2px solid var(--gris-bord);
+    text-decoration: none; color: inherit; transition: all 0.25s; position: relative; display: flex; gap: 16px; align-items: center;
+  }
+  .carte:hover { transform: translateY(-3px); box-shadow: var(--ombre-forte); }
+  .carte .rang { width: 42px; height: 42px; border-radius: 12px; display:flex; align-items:center; justify-content:center; font-weight: 900; font-size: 1.2rem; color:#fff; flex-shrink:0; }
+  .carte.top1 .rang { background: linear-gradient(135deg, #dc2626, #f59e0b); }
+  .carte.top2 .rang { background: linear-gradient(135deg, #ea7317, #f59e0b); }
+  .carte.top3 .rang { background: linear-gradient(135deg, #ca8a04, #eab308); }
+  .carte.top4 .rang { background: linear-gradient(135deg, #0d9488, #14b8a6); }
+  .carte.top5 .rang { background: linear-gradient(135deg, #2d6a9f, #3b82f6); }
+  .carte.top6 .rang { background: linear-gradient(135deg, #64748b, #94a3b8); }
+
+  .carte .corps { flex: 1; min-width: 0; }
+  .carte .ch-titre { font-size: 1.08rem; font-weight: 700; color: var(--bleu-fonce); margin-bottom: 3px; }
+  .carte .ch-desc { font-size: 0.84rem; color: var(--gris); }
+  .carte .stats { display:flex; gap:10px; align-items:center; margin-top:8px; flex-wrap:wrap; }
+  .carte .nb-q { font-weight: 800; font-size: 0.88rem; padding: 3px 11px; border-radius: 20px; }
+  .carte.top1 .nb-q { background:#fee2e2; color:#991b1b; }
+  .carte.top2 .nb-q { background:#fed7aa; color:#9a3412; }
+  .carte.top3 .nb-q { background:#fef9c3; color:#854d0e; }
+  .carte.top4 .nb-q { background:#ccfbf1; color:#115e59; }
+  .carte.top5 .nb-q { background:#dbeafe; color:#1e40af; }
+  .carte.top6 .nb-q { background:#f1f5f9; color:#475569; }
+  .carte .barre-q { flex:1; min-width:80px; height:8px; background:var(--gris-clair); border-radius:5px; overflow:hidden; }
+  .carte .barre-q .bf { height:100%; border-radius:5px; }
+  .carte.top1 .bf { background:#dc2626; width:35%; } .carte.top2 .bf { background:#ea7317; width:30%; }
+  .carte.top3 .bf { background:#ca8a04; width:15%; } .carte.top4 .bf { background:#0d9488; width:15%; }
+  .carte.top5 .bf { background:#2d6a9f; width:15%; } .carte.top6 .bf { background:#64748b; width:2.5%; }
+  .carte .pct { font-size:0.8rem; font-weight:700; color:var(--gris); }
+  .carte .fleche { color: var(--bleu); font-weight: 800; font-size: 1.3rem; flex-shrink:0; }
+  .carte .priorite-tag { position:absolute; top:-8px; right:16px; font-size:0.68rem; font-weight:800; padding:3px 10px; border-radius:20px; text-transform:uppercase; letter-spacing:0.5px; }
+  .tag-focus { background:var(--rouge); color:#fff; }
+  .tag-fort { background:var(--orange); color:#fff; }
+  .tag-moyen { background:var(--jaune); color:#fff; }
+  .tag-faible { background:var(--gris); color:#fff; }
+
+  /* ===== Plan d'attaque ===== */
+  .plan {
+    background: linear-gradient(135deg, #1e3a5f, #2d6a9f); color:#fff;
+    border-radius: 14px; padding: 26px 28px; margin: 28px 0;
+    box-shadow: var(--ombre-forte);
+  }
+  .plan h2 { font-size: 1.2rem; margin-bottom: 14px; display:flex; align-items:center; gap:10px; }
+  .plan ol { margin-left: 6px; }
+  .plan ol li { margin-bottom: 10px; padding-left: 6px; line-height: 1.5; }
+  .plan ol li b { color: #fde68a; }
+  .plan .jour { background: rgba(255,255,255,0.12); border:1px solid rgba(255,255,255,0.2); padding: 8px 14px; border-radius: 20px; font-size:0.82rem; font-weight:700; display:inline-block; margin-right:6px; }
+
+  /* ===== Astuce */
+  .astuce { background: var(--vert-clair); border: 1px solid #86efac; border-radius: 12px; padding: 16px 20px; margin-top: 24px; font-size: 0.9rem; color: #14532d; }
+  .astuce b { color: #166534; }
+
+  footer { text-align: center; padding: 24px 18px; color: var(--gris); font-size: 0.82rem; border-top: 1px solid var(--gris-bord); }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <span class="badge">ISTQB · Niveau Fondation v4.0</span>
+  <h1>🎯 Stratégie de révision</h1>
+  <p>40 questions · 60 minutes · réussite à 65 %. Classe les chapitres par rentabilité et focalise tes efforts.</p>
+  <div class="passer">✅ Objectif : 26 / 40 bonnes réponses</div>
+</header>
+
+<main class="container">
+
+  <!-- OBJECTIF EXAMEN -->
+  <div class="objectif">
+    <h2>L'examen en bref</h2>
+    <div class="chiffre">40 <small>questions</small> · 60 <small>min</small></div>
+    <div class="barre-exam"><div class="fill"></div><div class="seuil"></div></div>
+    <p style="margin-top:18px">Seuil de réussite : <strong>65 %</strong> → il te faut <strong>26 bonnes réponses</strong> minimum. Pas de pénalité (les mauvaises réponses ne retirent pas de points).</p>
+  </div>
+
+  <!-- TITRE CHAPITRES PAR RENTABILITÉ -->
+  <div class="titre-section">
+    <div class="pastille" style="background:var(--rouge);">🔥</div>
+    Chapitres classés par rentabilité (le plus de questions d'abord)
+  </div>
+
+  <div class="grille">
+
+    <!-- TOP 1 : Chapitre 4 -->
+    <a class="carte top1" href="ISTQB_Chapitre4_Techniques.html">
+      <span class="priorite-tag tag-focus">PRIORITÉ MAX</span>
+      <div class="rang">1</div>
+      <div class="corps">
+        <div class="ch-titre">Ch.4 — Techniques de test</div>
+        <div class="ch-desc">Boîte noire (équivalence, valeurs limites, décisions, états), boîte blanche, expérience, collaboration. <strong>Niveau K3 : à appliquer !</strong></div>
+        <div class="stats">
+          <span class="nb-q">14 Q</span>
+          <div class="barre-q"><div class="bf"></div></div>
+          <span class="pct">35% de l'examen</span>
+        </div>
+      </div>
+      <div class="fleche">→</div>
+    </a>
+
+    <!-- TOP 2 : Chapitre 5 -->
+    <a class="carte top2" href="ISTQB_Chapitre5_Gestion.html">
+      <span class="priorite-tag tag-fort">PRIORITÉ FORTE</span>
+      <div class="rang">2</div>
+      <div class="corps">
+        <div class="ch-titre">Ch.5 — Gestion des activités de test</div>
+        <div class="ch-desc">Planification, estimation, risques projet/produit, pilotage, rapports, défauts. <strong>Inclut des K3</strong> (estimation, rapport de défaut).</div>
+        <div class="stats">
+          <span class="nb-q">12 Q</span>
+          <div class="barre-q"><div class="bf"></div></div>
+          <span class="pct">30% de l'examen</span>
+        </div>
+      </div>
+      <div class="fleche">→</div>
+    </a>
+
+    <!-- TOP 3 : Chapitre 1 -->
+    <a class="carte top3" href="ISTQB_Chapitre1_Fondamentaux.html">
+      <span class="priorite-tag tag-moyen">IMPORTANT</span>
+      <div class="rang">3</div>
+      <div class="corps">
+        <div class="ch-titre">Ch.1 — Fondamentaux des tests</div>
+        <div class="ch-desc">7 principes, chaîne cause racine→défaillance, test vs AQ, activités & rôles. <strong>La base, beaucoup de K2.</strong></div>
+        <div class="stats">
+          <span class="nb-q">6 Q</span>
+          <div class="barre-q"><div class="bf"></div></div>
+          <span class="pct">15% de l'examen</span>
+        </div>
+      </div>
+      <div class="fleche">→</div>
+    </a>
+
+    <!-- TOP 4 : Chapitre 2 -->
+    <a class="carte top4" href="ISTQB_Chapitre2_SDLC.html">
+      <span class="priorite-tag tag-moyen">IMPORTANT</span>
+      <div class="rang">4</div>
+      <div class="corps">
+        <div class="ch-titre">Ch.2 — Tests dans le cycle de vie</div>
+        <div class="ch-desc">SDLC, shift-left, DevOps, 5 niveaux de test, 4 types, confirmation/régression, maintenance.</div>
+        <div class="stats">
+          <span class="nb-q">5 Q</span>
+          <div class="barre-q"><div class="bf"></div></div>
+          <span class="pct">12,5% de l'examen</span>
+        </div>
+      </div>
+      <div class="fleche">→</div>
+    </a>
+
+    <!-- TOP 5 : Chapitre 3 -->
+    <a class="carte top5" href="ISTQB_Chapitre3_TestStatique.html">
+      <span class="priorite-tag tag-faible">À VOIR</span>
+      <div class="rang">5</div>
+      <div class="corps">
+        <div class="ch-titre">Ch.3 — Test statique</div>
+        <div class="ch-desc">Test statique vs dynamique, revues (types, rôles, processus), analyse statique.</div>
+        <div class="stats">
+          <span class="nb-q">3 Q</span>
+          <div class="barre-q"><div class="bf"></div></div>
+          <span class="pct">7,5% de l'examen</span>
+        </div>
+      </div>
+      <div class="fleche">→</div>
+    </a>
+
+    <!-- TOP 6 : Chapitre 6 -->
+    <a class="carte top6" href="ISTQB_Chapitre6_Outils.html">
+      <span class="priorite-tag tag-faible">RAPIDE</span>
+      <div class="rang">6</div>
+      <div class="corps">
+        <div class="ch-titre">Ch.6 — Outils de test</div>
+        <div class="ch-desc">Types d'outils, avantages & risques de l'automatisation. Le plus court, à mémoriser vite.</div>
+        <div class="stats">
+          <span class="nb-q">1 Q</span>
+          <div class="barre-q"><div class="bf"></div></div>
+          <span class="pct">2,5% de l'examen</span>
+        </div>
+      </div>
+      <div class="fleche">→</div>
+    </a>
+
+  </div>
+
+  <!-- PLAN D'ATTAQUE 4 JOURS -->
+  <div class="plan">
+    <h2>📅 Plan d'attaque — 4 jours</h2>
+    <ol>
+      <li><span class="jour">JOUR 1</span> <b>Les 2 gros d'abord (65% de l'examen !)</b> → Fiches Ch.4 + Ch.5 + leurs flashcards. C'est là que tu gagnes le plus de points.</li>
+      <li><span class="jour">JOUR 2</span> <b>Les fondamentaux</b> → Ch.1 + Ch.2 (27,5% cumulé). Refais aussi les flashcards Ch.4/5 de la veille.</li>
+      <li><span class="jour">JOUR 3</span> <b>Les rapides + révision</b> → Ch.3 + Ch.6 (10% cumulé, vite fait). Puis <b>refais TOUTES les flashcards</b> en mode active recall.</li>
+      <li><span class="jour">JOUR 4</span> <b>Examens blancs</b> → Trouve des QCM ISTQB v4.0 en ligne, chronomètre 60 min, vise 26+/40. Refais les flashcards des questions ratées.</li>
+    </ol>
+  </div>
+
+  <div class="astuce">
+    💡 <b>Règle d'or :</b> les chapitres 4 et 5 représentent à eux deux <b>26 questions sur 40 (65%)</b> — soit pile le seuil de réussite ! Si tu maîtrises parfaitement ces 2 chapitres, tu as déjà de très fortes chances de réussir. Concentre 60% de ton temps dessus.
+  </div>
+
+</main>
+
+<footer>
+  ISTQB Certified Tester — Niveau Fondation v4.0 · Syllabus officiel (40 Q, 60 min, réussite 65%)<br>
+  Bonne révision ! 🍀
+</footer>
+
+</body>
+</html>
