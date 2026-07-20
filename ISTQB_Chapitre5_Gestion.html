@@ -139,7 +139,6 @@
 
 <nav class="sticky">
   <a href="index.html" class="home">🏠 Sommaire</a>
-  <a href="#mots">Mots-clés</a>
   <a href="#s1">5.1 Planification</a>
   <a href="#s2">5.2 Risques</a>
   <a href="#s3">5.3 Pilotage/Contrôle</a>
@@ -148,12 +147,6 @@
 </nav>
 
 <main class="container">
-
-  <section class="bloc" id="mots">
-    <h2><span class="num">🔑</span> Mots-clés en flashcards</h2>
-    <p>Termes officiels du syllabus. <strong>Clique sur une carte</strong> pour voir la définition.</p>
-    <div class="flashcards" id="flashcards"></div>
-  </section>
 
   <!-- 5.1 -->
   <section class="bloc" id="s1">
@@ -368,54 +361,6 @@
   Mémo · <strong>ISTQB Certified Tester — Niveau Fondation v4.0</strong> · Chap.5 (p.54–66)<br>
   À utiliser avec le syllabus officiel. Bonne révision ! 🚀
 </footer>
-
-<script>
-const flashcards = [
-  { q: "Planification des tests", r: "Définit objectifs + approche selon contraintes. Produit le plan de test (moyens, calendrier, approche)." },
-  { q: "Plan de test", r: "Décrit objectifs, ressources & processus. Contenu : contexte, hypothèses, risques, approche, budget." },
-  { q: "Critères d'entrée", r: "PRÉCONDITIONS pour entreprendre une activité (ressources, base de test, qualité initiale)." },
-  { q: "Critères de sortie", r: "Ce qui doit être réalisé pour DÉCLARER ACHEVÉ (couverture, défauts, clôture)." },
-  { q: "Definition of Done", r: "En Agile = critères de sortie. Métriques objectives pour un livrable." },
-  { q: "Definition of Ready", r: "En Agile = critères d'entrée d'une User Story pour démarrer dev/test." },
-  { q: "Estimation ratios", r: "Basée sur métriques : ratios issus de projets antérieurs (ex: dev:test = 3:2)." },
-  { q: "Extrapolation", r: "Métriques : modèle mathématique sur données en cours. Idéal pour itératif." },
-  { q: "Delphi large bande", r: "Expertise : experts isolés, itératif jusqu'à consensus. Planning poker = variante." },
-  { q: "Estimation 3 points", r: "Expertise : E = (a + 4m + b)/6. Optimiste, probable, pessimiste." },
-  { q: "Priorisation (risques)", r: "Cas couvrant les risques les + importants exécutés en premier." },
-  { q: "Priorisation (couverture)", r: "Cas à couverture la + élevée en premier (+ variante additionnelle)." },
-  { q: "Pyramide des tests", r: "Modèle : couches (unitaires bas → bout-en-bout haut). Plus haut = moins détaillé, moins isolé, plus lent." },
-  { q: "Quadrants de tests", r: "Q1 (techno+soutien), Q2 (métier+soutien), Q3 (métier+critique), Q4 (techno+critique)." },
-  { q: "Risque", r: "Événement potentiel à effet négatif. Niveau = Probabilité × Impact." },
-  { q: "Niveau de risque", r: "Mesure du risque = Probabilité (0<p<1) × Impact (préjudice)." },
-  { q: "Risque projet", r: "Lien avec GESTION & CONTRÔLE du projet (organisation, humains, techniques, fournisseurs)." },
-  { q: "Risque produit", r: "Lien avec CARACTÉRISTIQUES-QUALITÉ (ISO 25010) : fonctionnalités, calculs, sécurité…" },
-  { q: "Analyse des risques", r: "Identification (liste exhaustive) + évaluation (catégoriser, probabilité, impact, prioriser)." },
-  { q: "Évaluation des risques", r: "Catégoriser, déterminer niveau (quantitatif P×I ou qualitatif matrice), prioriser." },
-  { q: "Contrôle des risques", r: "Atténuation (actions pour réduire) + surveillance (vérifier efficacité)." },
-  { q: "Atténuation des risques", r: "Mettre en œuvre les actions pour réduire le niveau de risque." },
-  { q: "Tests basés sur les risques", r: "Activités sélectionnées, priorisées et gérées sur base de l'analyse & contrôle des risques." },
-  { q: "Pilotage des tests", r: "COLLECTE d'informations pour évaluer l'avancement & les critères de sortie." },
-  { q: "Contrôle des tests", r: "ACTIONS CORRECTIVES via directives (reprioriser, ajuster, ajouter ressources)." },
-  { q: "Rapport d'avancement", r: "Régulier : période, progression, obstacles, métriques, risques, tests prévus." },
-  { q: "Rapport de clôture", r: "Résumé final : qualité vs plan, écarts, leçons apprises, risques non atténués." },
-  { q: "Gestion de configuration", r: "Identifie, contrôle, suit les produits d'activités. Base de référence = figée." },
-  { q: "Rapport de défaut", r: "Contenu : ID, titre, étapes, attendu vs réel, sévérité, priorité, statut, références." },
-  { q: "Sévérité vs Priorité", r: "Sévérité = impact technique. Priorité = ordre de correction (métier). Pas synonymes !" },
-  { q: "Approche de test", r: "Niveaux, types, techniques, livrables, critères d'entrée/sortie choisis pour un projet." },
-];
-const fc = document.getElementById('flashcards');
-flashcards.forEach(c => {
-  const d = document.createElement('div');
-  d.className = 'flashcard';
-  d.innerHTML = `<div class="fc-inner">
-    <div class="fc-face fc-recto"><div class="label">Terme</div><div class="question">${c.q}</div></div>
-    <div class="fc-face fc-verso"><div class="label" style="font-size:0.64rem;color:var(--gris);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Définition</div><div class="reponse">${c.r}</div></div>
-  </div>
-  <div class="fc-indice">clique pour retourner</div>`;
-  d.addEventListener('click', () => d.classList.toggle('retournee'));
-  fc.appendChild(d);
-});
-</script>
 
 </body>
 </html>

@@ -194,19 +194,11 @@
 
 <nav class="sticky">
   <a href="index.html" class="home">🏠 Sommaire</a>
-  <a href="#mots">Mots-clés</a>
   <a href="#s1">3.1 Bases</a>
   <a href="#s2">3.2 Processus de revue</a>
 </nav>
 
 <main class="container">
-
-  <!-- MOTS-CLÉS EN FLASHCARDS -->
-  <section class="bloc" id="mots">
-    <h2><span class="num">🔑</span> Mots-clés en flashcards</h2>
-    <p>Termes officiels du syllabus. <strong>Clique sur une carte</strong> pour voir la définition.</p>
-    <div class="flashcards" id="flashcards"></div>
-  </section>
 
   <!-- 3.1 -->
   <section class="bloc" id="s1">
@@ -345,38 +337,6 @@
   Mémo · <strong>ISTQB Certified Tester — Niveau Fondation v4.0</strong> · Chap.3 (p.36–42)<br>
   À utiliser avec le syllabus officiel. Bonne révision ! 🚀
 </footer>
-
-<script>
-const flashcards = [
-  { q: "Test statique", r: "Évalue le code, l'architecture, les specs… SANS exécuter le logiciel (revues manuelles ou analyse statique)." },
-  { q: "Test dynamique", r: "Exécute le logiciel pour provoquer des défaillances (défauts déduits par analyse)." },
-  { q: "Analyse statique", r: "Évalue les produits d'activités via des OUTILS (structure requise : code, modèles, syntaxe formelle)." },
-  { q: "Revue", r: "Examen manuel d'un produit d'activités. Tout produit lisible & compréhensible peut être revu." },
-  { q: "Anomalie", r: "Écart identifié lors d'une revue. ⚠️ N'est PAS forcément un défaut : doit être analysée/discutée." },
-  { q: "Revue informelle", r: "Pas de processus défini, pas de résultat formel. Objectif : détecter des anomalies." },
-  { q: "Relecture technique", r: "Menée par l'AUTEUR. Évaluer qualité, consensus, idées, formation, motivation." },
-  { q: "Revue technique", r: "Réviseurs qualifiés + MODÉRATEUR. Consensus & décisions techniques + anomalies." },
-  { q: "Inspection", r: "Type le PLUS FORMEL. Processus complet. Objectif : MAX d'anomalies. Métriques. Auteur ≠ réviseur/scribe." },
-  { q: "Revue formelle", r: "Niveau de formalité élevé (ex : inspection) : processus complet, rôles définis, métriques." },
-  { q: "Modérateur (facilitateur)", r: "Assure le déroulement efficace des réunions : médiation, temps, cadre sûr." },
-  { q: "Scribe (rapporteur)", r: "Rassemble les anomalies, enregistre les décisions & nouvelles anomalies." },
-  { q: "Responsable de revue", r: "Responsabilité globale : qui est impliqué, lieu, date de la revue." },
-  { q: "Revue individuelle", r: "Étape du processus : chaque réviseur évalue seul (checklists, scénarios) → anomalies." },
-  { q: "Communication & analyse", r: "Étape : anomalies discutées/analyticsées, décision sur statut & actions (souvent en réunion)." },
-];
-const fc = document.getElementById('flashcards');
-flashcards.forEach(c => {
-  const d = document.createElement('div');
-  d.className = 'flashcard';
-  d.innerHTML = `<div class="fc-inner">
-    <div class="fc-face fc-recto"><div class="label">Terme</div><div class="question">${c.q}</div></div>
-    <div class="fc-face fc-verso"><div class="label" style="font-size:0.66rem;color:var(--gris);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Définition</div><div class="reponse">${c.r}</div></div>
-  </div>
-  <div class="fc-indice">clique pour retourner</div>`;
-  d.addEventListener('click', () => d.classList.toggle('retournee'));
-  fc.appendChild(d);
-});
-</script>
 
 </body>
 </html>

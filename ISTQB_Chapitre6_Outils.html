@@ -121,18 +121,11 @@
 
 <nav class="sticky">
   <a href="index.html" class="home">🏠 Sommaire</a>
-  <a href="#mots">Mots-clés</a>
   <a href="#s1">6.1 Types d'outils</a>
   <a href="#s2">6.2 Avantages & risques</a>
 </nav>
 
 <main class="container">
-
-  <section class="bloc" id="mots">
-    <h2><span class="num">🔑</span> Mots-clés en flashcards</h2>
-    <p>Le chapitre 6 a un seul mot-clé officiel : <strong>automatisation des tests</strong>. Voici les concepts clés à réviser.</p>
-    <div class="flashcards" id="flashcards"></div>
-  </section>
 
   <!-- 6.1 -->
   <section class="bloc" id="s1">
@@ -197,38 +190,6 @@
   Mémo · <strong>ISTQB Certified Tester — Niveau Fondation v4.0</strong> · Chap.6 (p.67–69)<br>
   À utiliser avec le syllabus officiel. Bonne révision ! 🚀
 </footer>
-
-<script>
-const flashcards = [
-  { q: "Automatisation des tests", r: "Utilisation d'outils pour exécuter des tests, réduire le manuel répétitif, gagner en cohérence & rapidité." },
-  { q: "Outils de gestion", r: "Augmentent l'efficience du processus : SDLC, exigences, tests, défauts, configuration." },
-  { q: "Outils de test statique", r: "Aident à effectuer les revues & analyses statiques." },
-  { q: "Outils de conception/implémentation", r: "Facilitent la génération des cas de test, données & procédures." },
-  { q: "Outils d'exécution & couverture", r: "Exécution automatisée des tests + mesure de la couverture." },
-  { q: "Outils de tests non fonctionnels", r: "Permettent des tests difficiles/impossibles manuellement (performance, sécurité…)." },
-  { q: "Outils DevOps", r: "Soutiennent le pipeline de livraison, workflow, build auto, CI/CD." },
-  { q: "Avantage clé (temps)", r: "Gain de temps par réduction du travail manuel répétitif (régression, comparaison résultats…)." },
-  { q: "Avantage clé (qualité)", r: "Prévention des erreurs humaines par cohérence & répétabilité accrues." },
-  { q: "Avantage clé (objectivité)", r: "Évaluation + objective (couverture) + mesures trop complexes pour les humains." },
-  { q: "Risque clé (attentes)", r: "Attentes irréalistes sur les avantages de l'outil." },
-  { q: "Risque clé (estimations)", r: "Estimations inexactes du temps/coût d'introduction, maintenance & modification du processus." },
-  { q: "Risque clé (dépendance)", r: "Trop grande dépendance → ignorer la réflexion humaine critique." },
-  { q: "Risque clé (fournisseur)", r: "Dépendance fournisseur : faillite, retrait, vente, support médiocre." },
-  { q: "Piège examen", r: "Un outil n'est PAS une garantie de succès. Parfois le test MANUEL est plus approprié." },
-];
-const fc = document.getElementById('flashcards');
-flashcards.forEach(c => {
-  const d = document.createElement('div');
-  d.className = 'flashcard';
-  d.innerHTML = `<div class="fc-inner">
-    <div class="fc-face fc-recto"><div class="label">Terme</div><div class="question">${c.q}</div></div>
-    <div class="fc-face fc-verso"><div class="label" style="font-size:0.64rem;color:var(--gris);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Définition</div><div class="reponse">${c.r}</div></div>
-  </div>
-  <div class="fc-indice">clique pour retourner</div>`;
-  d.addEventListener('click', () => d.classList.toggle('retournee'));
-  fc.appendChild(d);
-});
-</script>
 
 </body>
 </html>

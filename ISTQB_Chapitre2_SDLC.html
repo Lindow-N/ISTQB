@@ -218,20 +218,12 @@
 
 <nav class="sticky">
   <a href="index.html" class="home">🏠 Sommaire</a>
-  <a href="#mots">Mots-clés</a>
   <a href="#s1">2.1 SDLC</a>
   <a href="#s2">2.2 Niveaux & types</a>
   <a href="#s3">2.3 Maintenance</a>
 </nav>
 
 <main class="container">
-
-  <!-- MOTS-CLÉS EN FLASHCARDS -->
-  <section class="bloc" id="mots">
-    <h2><span class="num">🔑</span> Mots-clés en flashcards</h2>
-    <p>Termes officiels du syllabus. <strong>Clique sur une carte</strong> pour voir la définition.</p>
-    <div class="flashcards" id="flashcards"></div>
-  </section>
 
   <!-- 2.1 -->
   <section class="bloc" id="s1">
@@ -399,40 +391,6 @@
   Mémo · <strong>ISTQB Certified Tester — Niveau Fondation v4.0</strong> · Chap.2 (p.27–35)<br>
   À utiliser avec le syllabus officiel. Bonne révision ! 🚀
 </footer>
-
-<script>
-const flashcards = [
-  { q: "Niveau de test", r: "Groupe d'activités de test organisées & gérées ensemble, à un stade de dev donné (composants → système)." },
-  { q: "Type de test", r: "Groupe d'activités liées à des caractéristiques-qualité spécifiques (fonctionnel, non-fonctionnel, boîte noire/blanche)." },
-  { q: "Objet de test", r: "Le composant/système testé à un niveau donné (ex: composant, sous-système, système)." },
-  { q: "Tests de composants", r: "Niveau : composants isolés. Souvent par les devs + harnais/frameworks (= tests unitaires)." },
-  { q: "Tests d'intégration de composants", r: "Niveau : interfaces & interactions entre composants (stratégie ascendante/descendante/big-bang)." },
-  { q: "Tests d'intégration", r: "Vise à tester les interfaces entre composants, sous-systèmes ou systèmes." },
-  { q: "Tests d'intégration de systèmes", r: "Niveau : interfaces entre le système sous test et les systèmes/services externes." },
-  { q: "Tests système", r: "Niveau : comportement & capacités d'un système complet (fonctionnel, bout-en-bout, non-fonctionnel)." },
-  { q: "Tests d'acceptation", r: "Niveau : validation & aptitude au déploiement. Idéalement par les utilisateurs (UAT, alpha, bêta…)." },
-  { q: "Tests fonctionnels", r: "Type : évalue les fonctions (« QUOI »). Vérifie complétude, exactitude, adéquation. Basé sur les spécifications." },
-  { q: "Tests non fonctionnels", r: "Type : évalue les attributs (« COMMENT »). Caractéristiques ISO 25010 (perf, fiabilité, sécurité…)." },
-  { q: "Tests boîte noire", r: "Type : basé sur les spécifications externes → vérifie le comportement vs spécifications." },
-  { q: "Tests boîte blanche", r: "Type : basé sur la structure interne (code, architecture, flux) → vise la couverture de la structure." },
-  { q: "Tests de confirmation", r: "Confirme que le DÉFAUT ORIGINAL est corrigé (rejoue les cas qui avaient échoué)." },
-  { q: "Tests de régression", r: "Confirme qu'une modification n'a causé AUCUNE conséquence négative ailleurs (automatisable)." },
-  { q: "Tests de maintenance", r: "Tests sur un système en production : succès des changements + régressions (déclencheurs)." },
-  { q: "Shift-left", r: "Approche consistant à tester PLUS TÔT dans le SDLC (test précoce), sans négliger les phases ultérieures." },
-];
-const fc = document.getElementById('flashcards');
-flashcards.forEach(c => {
-  const d = document.createElement('div');
-  d.className = 'flashcard';
-  d.innerHTML = `<div class="fc-inner">
-    <div class="fc-face fc-recto"><div class="label">Terme</div><div class="question">${c.q}</div></div>
-    <div class="fc-face fc-verso"><div class="label" style="font-size:0.66rem;color:var(--gris);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Définition</div><div class="reponse">${c.r}</div></div>
-  </div>
-  <div class="fc-indice">clique pour retourner</div>`;
-  d.addEventListener('click', () => d.classList.toggle('retournee'));
-  fc.appendChild(d);
-});
-</script>
 
 </body>
 </html>

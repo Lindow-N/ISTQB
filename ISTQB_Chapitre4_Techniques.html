@@ -206,7 +206,6 @@
 
 <nav class="sticky">
   <a href="index.html" class="home">🏠 Sommaire</a>
-  <a href="#mots">Mots-clés</a>
   <a href="#s1">4.1 Aperçu</a>
   <a href="#s2">4.2 Boîte noire</a>
   <a href="#s3">4.3 Boîte blanche</a>
@@ -215,13 +214,6 @@
 </nav>
 
 <main class="container">
-
-  <!-- MOTS-CLÉS EN FLASHCARDS -->
-  <section class="bloc" id="mots">
-    <h2><span class="num">🔑</span> Mots-clés en flashcards</h2>
-    <p>Termes officiels du syllabus. <strong>Clique sur une carte</strong> pour voir la définition.</p>
-    <div class="flashcards" id="flashcards"></div>
-  </section>
 
   <!-- 4.1 -->
   <section class="bloc" id="s1">
@@ -413,50 +405,6 @@
   Mémo · <strong>ISTQB Certified Tester — Niveau Fondation v4.0</strong> · Chap.4 (p.43–53)<br>
   À utiliser avec le syllabus officiel. Bonne révision ! 🚀
 </footer>
-
-<script>
-const flashcards = [
-  { q: "Technique de test", r: "Aide à développer de façon systématique un ensemble restreint mais suffisant de cas de test." },
-  { q: "Technique boîte noire", r: "Basée sur le COMPORTEMENT SPÉCIFIÉ, sans référence à la structure interne. Indépendante de l'implémentation." },
-  { q: "Technique boîte blanche", r: "Basée sur la STRUCTURE INTERNE & le traitement. Cas créés après la conception/implémentation." },
-  { q: "Technique basée sur l'expérience", r: "Utilise les connaissances & l'expérience du testeur. Complémentaire des autres." },
-  { q: "Partition d'équivalence", r: "Divise les données en partitions traitées de la même façon. 1 test par partition suffit (valide + invalide)." },
-  { q: "Analyse des valeurs limites", r: "Exerce les LIMITES des partitions (uniquement ordonnées). 2-valeurs ou 3-valeurs." },
-  { q: "Valeurs limites 2-valeurs", r: "Par limite : la valeur limite + sa voisine de la partition adjacente." },
-  { q: "Valeurs limites 3-valeurs", r: "Par limite : la valeur limite + ses 2 voisines. Plus rigoureuse que 2-valeurs." },
-  { q: "Test par tables de décisions", r: "Teste les COMBINAISONS DE CONDITIONS → résultats. Lignes = conditions/actions, colonnes = règles." },
-  { q: "Table de décision (entrée limitée)", r: "Toutes les conditions & actions sont booléennes (Vrai/Faux)." },
-  { q: "Table de décision (entrée étendue)", r: "Conditions & actions peuvent prendre des valeurs multiples (plages, partitions…)." },
-  { q: "Test de transition d'état", r: "Modélise états & transitions valides. Événement [garde] / action." },
-  { q: "Couverture tous les états", r: "Élément = les états. 100% = tous les états visités. Le plus FAIBLE." },
-  { q: "Couverture transitions valides (0-switch)", r: "Élément = transitions valides. Le plus LARGEMENT UTILISÉ. Garantit tous les états." },
-  { q: "Couverture toutes les transitions", r: "Valides + non valides. Le plus RIGOUREUX (critique/sécurité)." },
-  { q: "Couverture des instructions", r: "Boîte blanche. Élément = instructions exécutables. 100% = toutes exécutées au moins 1 fois." },
-  { q: "Couverture des branches", r: "Boîte blanche. Élément = branches (transferts de contrôle). ENGLOBE les instructions." },
-  { q: "Estimation d'erreurs", r: "Anticiper erreurs/défauts à partir de l'expérience. Attaques de fautes = approche méthodique." },
-  { q: "Test exploratoire", r: "Tests conçus, exécutés & évalués SIMULTANÉMENT. Utile si specs faibles ou pression de temps." },
-  { q: "Test basé sur des checklists", r: "Couvrir les conditions d'une checklist (en questions). À mettre à jour régulièrement." },
-  { q: "User Story (3 C)", r: "Carte (support) + Conversation (usage) + Confirmation (critères d'acceptation)." },
-  { q: "INVEST", r: "Une bonne US : Indépendante, Négociable, Valeur, Estimable, Simple, Testable." },
-  { q: "Critères d'acceptation", r: "Conditions à remplir pour accepter la US. = conditions de test. Formats : scénario ou règles." },
-  { q: "ATDD", r: "Tests d'acceptation créés AVANT l'implémentation. Atelier de spec → cas de test (exemples)." },
-  { q: "Approche basée sur la collaboration", r: "Concentrée sur l'ÉVITEMENT des défauts (pas seulement détection) via collaboration." },
-  { q: "Couverture", r: "Degré auquel les éléments de couverture sont exercés, exprimé en %." },
-  { q: "Élément de couverture", r: "Entité (partition, branche, état…) qui doit être exercée pour atteindre une couverture." },
-];
-const fc = document.getElementById('flashcards');
-flashcards.forEach(c => {
-  const d = document.createElement('div');
-  d.className = 'flashcard';
-  d.innerHTML = `<div class="fc-inner">
-    <div class="fc-face fc-recto"><div class="label">Terme</div><div class="question">${c.q}</div></div>
-    <div class="fc-face fc-verso"><div class="label" style="font-size:0.64rem;color:var(--gris);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Définition</div><div class="reponse">${c.r}</div></div>
-  </div>
-  <div class="fc-indice">clique pour retourner</div>`;
-  d.addEventListener('click', () => d.classList.toggle('retournee'));
-  fc.appendChild(d);
-});
-</script>
 
 </body>
 </html>

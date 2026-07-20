@@ -231,7 +231,6 @@
 
 <nav class="sticky">
   <a href="index.html" class="home">🏠 Sommaire</a>
-  <a href="#mots">Mots-clés</a>
   <a href="#s1">1.1 Tester</a>
   <a href="#s2">1.2 Pourquoi</a>
   <a href="#s3">1.3 7 principes</a>
@@ -240,15 +239,6 @@
 </nav>
 
 <main class="container">
-
-  <!-- MOTS-CLÉS EN FLASHCARDS -->
-  <section class="bloc" id="mots">
-    <h2><span class="num">🔑</span> Mots-clés en flashcards</h2>
-    <p>Termes officiels du syllabus. <strong>Clique sur une carte</strong> pour voir la définition.</p>
-    <div class="flashcards" id="flashcards"></div>
-    <div class="box memo"><div class="t">🧠 La chaîne à connaître par cœur</div>
-    <strong>Cause racine → Erreur → Défaut → Défaillance</strong></div>
-  </section>
 
   <!-- 1.1 -->
   <section class="bloc" id="s1">
@@ -445,51 +435,6 @@
   Mémo · <strong>ISTQB Certified Tester — Niveau Fondation v4.0</strong> · Chap.1 (p.16–26)<br>
   À utiliser avec le syllabus officiel. Bonne révision ! 🚀
 </footer>
-
-<script>
-const flashcards = [
-  { q: "Test", r: "Ensemble d'activités pour découvrir les défauts et évaluer la qualité des artefacts (objets de test)." },
-  { q: "Objet de test", r: "Artefact testé (exigences, code, système…)." },
-  { q: "Débogage", r: "Activité de DÉVELOPPEMENT qui trouve & corrige la cause d'une défaillance." },
-  { q: "Vérification", r: "« Construire le produit correctement » → conformité aux exigences spécifiées." },
-  { q: "Validation", r: "« Construire le bon produit » → conformité aux besoins utilisateurs." },
-  { q: "Qualité", r: "Niveau auquel un système répond aux exigences et besoins des parties prenantes." },
-  { q: "Assurance qualité", r: "Approche PRÉVENTIVE, axée processus. Responsabilité de TOUS les acteurs." },
-  { q: "Cause racine", r: "Raison fondamentale d'un problème (qui conduit à une erreur)." },
-  { q: "Erreur", r: "Acte humain qui produit un défaut (pression, fatigue, complexité…)." },
-  { q: "Défaut", r: "Faute/bogue dans un artefact (code, doc). Peut entraîner une défaillance." },
-  { q: "Défaillance", r: "Le système ne fait pas ce qu'il devrait à l'exécution." },
-  { q: "Couverture", r: "Degré auquel les critères de couverture sont satisfaits (ex: exigences couvertes)." },
-  { q: "Base de test", r: "Corps de connaissances servant de source pour analysis/conception (exigences, specs…)." },
-  { q: "Condition de test", r: "Caractéristique testable dérivée de la base de test (issue de l'analyse)." },
-  { q: "Cas de test", r: "Ensemble d'entrées, conditions d'exécution et résultats attendus (issue de la conception)." },
-  { q: "Procédure de test", r: "Séquence d'exécution des cas de test." },
-  { q: "Données de test", r: "Données nécessaires pour exécuter les tests." },
-  { q: "Résultat de test", r: "Résultat observé vs attendu (capturé pendant l'exécution)." },
-  { q: "Objectif de test", r: "But à atteindre (trouver défauts, évaluer la qualité, etc.)." },
-  { q: "Testware", r: "Produits d'activités de test (plans, cas, scripts, logs…) gérés par config." },
-  { q: "Planification des tests", r: "Définir les objectifs du test + l'approche selon les contraintes." },
-  { q: "Pilotage des tests", r: "Vérifier en continu l'avancée réelle vs le plan." },
-  { q: "Contrôle des tests", r: "Prendre les mesures pour atteindre les objectifs du test." },
-  { q: "Analyse de test", r: "« Que tester ? » → conditions de test priorisées." },
-  { q: "Conception des tests", r: "« Comment tester ? » → cas de test, couverture." },
-  { q: "Implémentation des tests", r: "Créer le testware (procédures, scripts, données, env.)." },
-  { q: "Exécution des tests", r: "Exécuter selon le calendrier, comparer réel vs attendu." },
-  { q: "Clôture des tests", r: "Aux jalons : archivage, leçons apprises, rapport d'achèvement." },
-];
-const fc = document.getElementById('flashcards');
-flashcards.forEach(c => {
-  const d = document.createElement('div');
-  d.className = 'flashcard';
-  d.innerHTML = `<div class="fc-inner">
-    <div class="fc-face fc-recto"><div class="label">Terme</div><div class="question">${c.q}</div></div>
-    <div class="fc-face fc-verso"><div class="label" style="font-size:0.66rem;color:var(--gris);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Définition</div><div class="reponse">${c.r}</div></div>
-  </div>
-  <div class="fc-indice">clique pour retourner</div>`;
-  d.addEventListener('click', () => d.classList.toggle('retournee'));
-  fc.appendChild(d);
-});
-</script>
 
 </body>
 </html>
