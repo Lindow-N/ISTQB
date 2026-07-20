@@ -181,6 +181,7 @@
   }
   .etape .ct b { color:var(--bleu-fonce); font-size:0.92rem; }
   .etape .ct p { font-size:0.84rem; margin:2px 0 0; }
+  .etape .r { display:inline-block; background:var(--bleu-clair); color:var(--bleu-fonce); font-size:0.68rem; font-weight:700; padding:1px 7px; border-radius:20px; margin-left:4px; vertical-align:middle; }
   .etape .q { display:inline-block; background:var(--turquoise); color:#fff; font-size:0.72rem; font-weight:700; padding:2px 8px; border-radius:20px; margin-top:5px; }
 
   /* ===== FLASHCARDS ===== */
@@ -389,31 +390,47 @@
     <h2><span class="num">1.4</span> Activités, testware & rôles</h2>
 
     <h3>Le processus de test (K2) — souvent en parallèle/itératif</h3>
+    <p style="font-size:0.9rem">Au niveau Entreprise : <strong>Politique de test</strong> (cible) → <strong>Stratégie de test</strong> (méthodologie). Au niveau Projet/Release : <strong>Plan de test Maître</strong> → PDT par niveau (TU, TIC, TS, TIS, TA / Sprint).</p>
+
     <div class="tl">
-      <div class="etape"><div class="past">1</div><div class="ct"><b>Planification</b><p>Objectifs + approche selon contraintes.</p></div></div>
-      <div class="etape"><div class="past">2</div><div class="ct"><b>Pilotage & contrôle</b><p>Pilotage = avancée vs plan. Contrôle = actions correctives.</p></div></div>
-      <div class="etape"><div class="past">3</div><div class="ct"><b>Analyse</b><p>Base de test → conditions de test priorisées.</p><span class="q">« Que tester ? »</span></div></div>
-      <div class="etape"><div class="past">4</div><div class="ct"><b>Conception</b><p>Conditions → cas de test + couverture + données/env.</p><span class="q">« Comment tester ? »</span></div></div>
-      <div class="etape"><div class="past">5</div><div class="ct"><b>Implémentation</b><p>Procédures, scripts, suites, environnement.</p></div></div>
-      <div class="etape"><div class="past">6</div><div class="ct"><b>Exécution</b><p>Réel vs attendu, logs, analyse des anomalies.</p></div></div>
-      <div class="etape"><div class="past">7</div><div class="ct"><b>Clôture</b><p>Archivage, leçons apprises, rapport d'achèvement.</p></div></div>
+      <div class="etape"><div class="past">1</div><div class="ct"><b>Planification</b> <span class="r">Test Manager</span><p>Objectifs + approche selon contraintes. Produit le <strong>Plan de test</strong> (objectif, périmètre, risques, moyens : Env/Outils/Ressources, métriques, planning). <strong>DoR/DoD</strong> par niveau.</p></div></div>
+      <div class="etape"><div class="past">2</div><div class="ct"><b>Pilotage & contrôle</b> <span class="r">Test Manager</span><p>Pilotage = avancée vs plan. Contrôle = <strong>actions correctives</strong> (MAJ du PDT). Livrables : <strong>Rapport d'avancement</strong>, Rapport de gestion, Documentation des directives de contrôle.</p></div></div>
+      <div class="etape"><div class="past">3</div><div class="ct"><b>Analyse</b> <span class="r">Testeur</span><p>Lire & évaluer la base de test (specs, US, UC…) → <strong>Conditions de test</strong> (caractéristiques ISO 25010, critères d'acceptation). Rapports de défauts sur la base (test statique/testabilité).</p><span class="q">« Que tester ? »</span></div></div>
+      <div class="etape"><div class="past">4</div><div class="ct"><b>Conception</b> <span class="r">Testeur</span><p>Conditions → <strong>Cas de test</strong> (haut niveau) + <strong>Chartes de test</strong> (tests exploratoires). <strong>Traçabilité</strong> → couverture. Exigences données/env.</p><span class="q">« Comment tester ? »</span></div></div>
+      <div class="etape"><div class="past">5</div><div class="ct"><b>Implémentation</b> <span class="r">Testeur</span><p><strong>Procédure de test</strong> (scénario/suite). Manuel = suite de test · Auto = script. Organisées dans un <strong>calendrier d'exécution</strong> (campagne). Données & env. valorisés.</p></div></div>
+      <div class="etape"><div class="past">6</div><div class="ct"><b>Exécution</b> <span class="r">Testeur</span><p>Réel vs attendu. Livrables : <strong>Logs de test</strong>, <strong>Rapports de défauts</strong> (fiche d'anomalie).</p></div></div>
+      <div class="etape"><div class="past">7</div><div class="ct"><b>Clôture</b> <span class="r">Test Manager</span><p><strong>Rapport de clôture</strong>, mesures d'amélioration, leçons apprises, demandes de changement. <strong>PV de test</strong> (Accepté sans/avec réserve, Refusé). <strong>TESTWARE</strong> transféré à la maintenance.</p></div></div>
     </div>
+
+    <div class="box memo"><div class="t">🧠 Les 2 questions clés</div>
+    <strong>Analyse</strong> = « Que tester ? » → <strong>Conditions de test</strong>. &nbsp;|&nbsp; <strong>Conception</strong> = « Comment tester ? » → <strong>Cas de test</strong>.</div>
 
     <h3>Contexte (K2) — facteurs qui impactent le test</h3>
     <p style="font-size:0.9rem">Parties prenantes · Membres de l'équipe · Domaine métier · Facteurs techniques · Contraintes projet · Organisation · SDLC · Outils.</p>
 
-    <h3>Testware (K2) — exemples par activité</h3>
+    <h3>Testware (K2) — livrables & rôles par activité</h3>
     <table>
-      <thead><tr><th>Activité</th><th>Testware</th></tr></thead>
+      <thead><tr><th>Activité</th><th>Rôle</th><th>Livrables clés</th></tr></thead>
       <tbody>
-        <tr><td>Planification</td><td>Plan, calendrier, risques, critères de sortie</td></tr>
-        <tr><td>Analyse</td><td>Conditions de test, rapports de défauts</td></tr>
-        <tr><td>Conception</td><td>Cas de test, chartes, couverture</td></tr>
-        <tr><td>Implémentation</td><td>Procédures, scripts auto, données, env.</td></tr>
-        <tr><td>Exécution</td><td>Logs, rapports de défaut</td></tr>
-        <tr><td>Clôture</td><td>Rapport de clôture, leçons apprises</td></tr>
+        <tr><td><strong>1. Planification</strong></td><td>Test Manager</td><td><strong>Plan de test</strong>, calendrier, référentiel des risques, critères de sortie, DoR/DoD</td></tr>
+        <tr><td><strong>2. Pilotage & contrôle</strong></td><td>Test Manager</td><td><strong>Rapport d'avancement</strong>, rapports de gestion, directives de contrôle</td></tr>
+        <tr><td><strong>3. Analyse</strong></td><td>Testeur</td><td><strong>Conditions de test</strong>, rapports de défauts sur la base de test</td></tr>
+        <tr><td><strong>4. Conception</strong></td><td>Testeur</td><td><strong>Cas de test</strong>, chartes de test, éléments de couverture, exigences données/env.</td></tr>
+        <tr><td><strong>5. Implémentation</strong></td><td>Testeur</td><td><strong>Procédures</strong>, scripts auto, suites, données, env., calendrier d'exécution</td></tr>
+        <tr><td><strong>6. Exécution</strong></td><td>Testeur</td><td><strong>Logs de test</strong>, rapports de défaut</td></tr>
+        <tr><td><strong>7. Clôture</strong></td><td>Test Manager</td><td><strong>Rapport de clôture</strong>, <strong>PV de test</strong>, leçons apprises, testware transféré</td></tr>
       </tbody>
     </table>
+
+    <div class="box memo"><div class="t">🧠 Définitions complémentaires (formateur)</div>
+    <ul style="margin-bottom:0">
+      <li><strong>Charte de test</strong> = document pour les <strong>tests exploratoires</strong> (objectifs de test d'une session).</li>
+      <li><strong>Article de test</strong> = élément à tester dans l'objet de test (≠ objet de test = le produit complet).</li>
+      <li><strong>PV de test</strong> = avis de fin de test : <strong>Accepté sans réserve</strong> / <strong>Avec réserve</strong> / <strong>Refusé</strong>. Contient les anomalies & risques résiduels.</li>
+      <li><strong>Cas de test</strong> = Situation initiale + Valeur d'entrée + Action + Résultat attendu + Situation finale.</li>
+      <li><strong>Niveau de risque</strong> = Impact × Probabilité.</li>
+    </ul>
+    </div>
 
     <h3>Traçabilité (K2)</h3>
     <p style="font-size:0.9rem">Base de test ↔ testware ↔ résultats ↔ défauts. Sert à : évaluer la <strong>couverture</strong>, le <strong>risque résiduel</strong>, l'<strong>impact des changements</strong>, les audits.</p>
