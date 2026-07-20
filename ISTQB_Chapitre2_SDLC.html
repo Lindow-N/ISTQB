@@ -317,6 +317,14 @@
       <div class="niv n5"><span class="nn">5</span><h4>Acceptation</h4><p>Validation & aptitude au déploiement. Idéalement par les <strong>utilisateurs</strong>. UAT, opérationnelle, contractuelle/réglementaire, alpha, bêta.</p></div>
     </div>
 
+    <div class="box piege"><div class="t">⚠️ PIÈGE — Différencier les 5 niveaux (question type examen)</div>
+    <strong>QCM piège :</strong> « Lequel est LE PLUS susceptible d'être réalisé dans le cadre des <em>tests système</em> ? »<br>
+    ✅ <strong>BONNE RÉPONSE :</strong> « Test de sécurité d'un système de gestion de crédit par une équipe de test <strong>indépendante</strong> ».<br>
+    ❌ « Interface avec un système bancaire <strong>externe</strong> » → <strong>Intégration système</strong> (systèmes externes).<br>
+    ❌ « <strong>Bêta-test</strong> par des devs de formation » → <strong>Acceptation</strong> (utilisateurs).<br>
+    ❌ « Interactions UI ↔ BDD (à l'<em>intérieur</em> du système) » → <strong>Intégration composants</strong>.<br>
+    <em>Mots-clés déclencheurs :</em> « externe/tiers » ⇒ Intégration système | « indépendante + non fonctionnel (sécurité/perf) » ⇒ Système | « utilisateurs/bêta » ⇒ Acceptation | « composants internes » ⇒ Intégration composants.</div>
+
     <h3>FL-2.2.2 — Les 4 types de test (K2)</h3>
     <div class="types2">
       <div class="type-card fonc">
