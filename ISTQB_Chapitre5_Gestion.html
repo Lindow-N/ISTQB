@@ -178,6 +178,15 @@
     <div class="box memo"><strong>Épuisement du temps/budget</strong> = critère de sortie valable (si risque accepté par parties prenantes).<br>
     <strong>Agile :</strong> critères de sortie = <strong>Definition of Done</strong> · critères d'entrée = <strong>Definition of Ready</strong>.</div>
 
+    <div class="box piege"><div class="t">⚠️ PIÈGE — Identifier un critère d'entrée (question type examen)</div>
+    <strong>Règle d'or :</strong> Un critère d'entrée se vérifie <strong>AVANT</strong> de commencer l'étape. Ce n'est ni un résultat, ni une condition d'une étape suivante.<br><br>
+    <strong>QCM piège (DevOps) :</strong> Pipeline = (1) Développer → (2) Soumettre & fusionner dans la branche test → (3) Tests de composants.<br>
+    Quel est le critère d'entrée de l'étape (2) ?<br>
+    ✅ <strong>BONNE RÉPONSE :</strong> « L'<strong>analyse statique</strong> ne renvoie aucun avertissement de gravité élevée » (portail qualité vérifié par le dev AVANT de pousser son code).<br>
+    ❌ « Pas de conflit lors du merge » → c'est le <strong>résultat</strong> de l'étape (2), pas une condition initiale.<br>
+    ❌ « Tests de composants compilés » → c'est un critère d'entrée de l'étape <strong>(3)</strong>.<br>
+    ❌ « Couverture ≥ 80% » → on ne connaît la couverture qu'<strong>après</strong> l'exécution (étape 3).</div>
+
     <h3>FL-5.1.4 — Techniques d'estimation (K3 ★)</h3>
     <table>
       <thead><tr><th>Technique</th><th>Type</th><th>Principe</th></tr></thead>
