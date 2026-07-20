@@ -276,6 +276,14 @@
     Le nombre de règles croît de manière <strong>exponentielle</strong> avec le nombre de conditions. → Utiliser une table <strong>réduite</strong> ou une approche basée sur les risques.</div>
     <div class="box memo">La table de décision permet de trouver des <strong>lacunes ou contradictions</strong> dans les exigences.</div>
 
+    <div class="box piege"><div class="t">⚠️ PIÈGE — Table de décision (Boîte noire) vs Branches (Boîte blanche)</div>
+    <strong>QCM piège :</strong> « Quelle affirmation décrit LE MIEUX la différence entre tests par tables de décision et test des branches ? »<br>
+    ✅ <strong>BONNE RÉPONSE :</strong> « Dans les tests par table de décision, les cas de test sont <strong>indépendants</strong> de l'implémentation. Dans le test des branches, les cas ne peuvent être créés qu'<strong>après la conception ou l'implémentation</strong> du code. »<br>
+    ❌ « Le test des branches est basé sur l'anticipation des défauts » → NON, c'est l'<strong>estimation d'erreurs</strong> (technique basée sur l'expérience).<br><br>
+    <strong>La distinction fondamentale :</strong><br>
+    • <strong>Table de décision</strong> = <strong>boîte NOIRE</strong> → basée sur la <strong>spec/logique métier</strong>, <strong>indépendante</strong> du code.<br>
+    • <strong>Branches</strong> = <strong>boîte BLANCHE</strong> → basée sur le <strong>flux de contrôle du code</strong>, nécessite l'<strong>implémentation</strong>.</div>
+
     <h3>FL-4.2.4 — Test de transition d'état (K3)</h3>
     <p>Modélise le comportement via <strong>états</strong> & <strong>transitions valides</strong>. Une transition est initiée par un <strong>événement</strong>, qualifié par une <strong>condition de garde</strong>, pouvant entraîner une <strong>action</strong>.</p>
     <div class="formule">Syntaxe : <b>événement</b> [<b>condition de garde</b>] / <b>action</b></div>
