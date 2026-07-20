@@ -300,6 +300,20 @@
     <div class="box memo"><div class="t">🧠 Hiérarchie de force</div>
     Tous les états &lt; Transitions valides &lt; Toutes les transitions.<br>
     Transitions valides 100% <strong>garantit</strong> tous les états 100%. Ne tester qu'<strong>une transition non valide</strong> par cas = éviter le masquage de défauts.</div>
+
+    <div class="box def"><div class="t">🎯 EXEMPLE TYPE EXAMEN (K3) — Système de stockage</div>
+    <strong>Système</strong> : 3 états (START, NOT FULL, FULL). N = nb d'éléments (max 3). Événements : Add / Remove.<br>
+    <strong>Transitions valides :</strong><br>
+    • T1 : START → NOT FULL (Add / N:=1)<br>
+    • T2 : NOT FULL → NOT FULL (Add [N&lt;2] / N:=N+1)<br>
+    • T3 : NOT FULL → FULL (Add [N=2] / N:=N+1)<br>
+    • T4 : FULL → NOT FULL (Remove / N:=N-1)<br>
+    • T5 : NOT FULL → NOT FULL (Remove [N&gt;0] / N:=N-1)<br><br>
+    <strong>Question :</strong> Quelle séquence atteint 100% de couverture des transitions valides ?<br>
+    ✅ <strong>Add, Add, Add, Remove, Remove</strong> → couvre T1, T2, T3, T4, T5 (les 5 transitions) sans aucune transition invalide.<br>
+    ❌ « Add, Remove, Add, Add, Add » → rate T4.<br>
+    ❌ « Add, Add, Add, <em>Add</em>, Remove, Remove » → le 4ème Add depuis FULL est <strong>invalide</strong>.<br><br>
+    <strong>Méthode à retenir :</strong> 1) Lister les transitions valides. 2) Tracer le chemin (état + valeur de N). 3) Cocher les transitions. 4) Choisir l'option qui couvre tout sans transition invalide.</div>
   </section>
 
   <!-- 4.3 BOÎTE BLANCHE -->
@@ -315,6 +329,20 @@
     <p>Une <strong>branche</strong> = transfert de contrôle entre 2 nœuds. Peut être <strong>inconditionnelle</strong> (code en ligne droite) ou <strong>conditionnelle</strong> (résultat de décision : if/then, switch/case, boucle).</p>
     <p><strong>Élément de couverture :</strong> les branches. <strong>Couverture 100%</strong> = toutes les branches exercées.</p>
     <div class="box memo"><strong>La couverture des branches englobe celle des instructions</strong> : 100% branches → 100% instructions (mais <strong>pas l'inverse</strong>).</div>
+
+    <div class="box piege"><div class="t">⚠️ PIÈGE — Formule et définition de la couverture des branches</div>
+    <strong>QCM piège :</strong> « Définissons la mesure de la couverture des branches comme BCov = (X / Y) * 100%. Que représentent X et Y ? »<br>
+    ✅ <strong>BONNE RÉPONSE :</strong> X = nombre de <strong>branches</strong> exercées / Y = nombre total de <strong>branches</strong> dans le code.<br>
+    ❌ « <em>branches conditionnelles</em> » ou « <em>résultats de décision</em> » → <strong>FAUX</strong>.<br>
+    <strong>Pourquoi ?</strong> Une <em>branche</em> inclut le conditionnel (if, switch) <strong>ET</strong> l'inconditionnel (code en ligne droite). Un « résultat de décision » exclut l'inconditionnel : utiliser ce terme donnerait un pourcentage faux (trop élevé).<br>
+    <em>Moyen mnémo :</em> Couverture des <strong>branches</strong> = <strong>branches / branches</strong> (le mot exact, répété 2 fois).</div>
+
+    <div class="box piege"><div class="t">⚠️ PIÈGE — Additionner deux couvertures (T1 + T2)</div>
+    <strong>QCM piège :</strong> « T1 couvre 40% et T2 couvre 65% des instructions. Que peut-on affirmer ? »<br>
+    ✅ <strong>BONNE RÉPONSE :</strong> « Il existe au moins une instruction exécutée à la fois par T1 et T2 ».<br>
+    ❌ « La suite T1+T2 atteint 105% » → <strong>FAUX</strong> (la couverture est plafonnée à 100%).<br>
+    ❌ « La suite T1+T2 atteint une couverture complète des branches » → <strong>FAUX</strong> (on ne peut <strong>jamais</strong> déduire la couverture des branches à partir des instructions ; la branche est plus forte).<br>
+    <strong>Raisonnement :</strong> 40% + 65% = 105% &gt; 100%. Comme il n'y a que 100% du code, il y a <strong>obligatoirement un chevauchement</strong> (au moins 5% des instructions sont exécutées par les deux tests).</div>
 
     <h3>FL-4.3.3 — Valeur des tests boîte blanche (K2)</h3>
     <ul>
