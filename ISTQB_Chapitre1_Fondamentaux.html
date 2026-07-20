@@ -465,24 +465,36 @@
     </ul>
 
     <h3>Indépendance du test (K2)</h3>
+    <p style="font-size:0.9rem">Un certain degré d'indépendance rend le testeur <strong>plus efficace pour trouver des défauts</strong> (biais cognitifs différents de l'auteur).</p>
+
+    <h4>Les 4 niveaux d'indépendance</h4>
     <table>
-      <thead><tr><th>Niveau</th><th>Qui teste ?</th></tr></thead>
+      <thead><tr><th>Niveau</th><th>Qui teste ?</th><th>Exemple</th></tr></thead>
       <tbody>
-        <tr><td>Aucune</td><td>L'auteur lui-même</td></tr>
-        <tr><td>Un peu</td><td>Pairs, même équipe</td></tr>
-        <tr><td>Élevée</td><td>Testeurs hors équipe, dans l'org.</td></tr>
-        <tr><td>Très élevée</td><td>Testeurs hors organisation</td></tr>
+        <tr><td><strong>Aucune</strong></td><td>L'auteur lui-même</td><td>Dev teste son propre code</td></tr>
+        <tr><td><strong>Un peu</strong></td><td>Les pairs de l'auteur (même équipe)</td><td>Autre dev de l'équipe</td></tr>
+        <tr><td><strong>Élevée</strong></td><td>Testeurs hors équipe, dans l'organisation</td><td>Équipe de test dédiée</td></tr>
+        <tr><td><strong>Très élevée</strong></td><td>Testeurs hors organisation</td><td>Prestataire externe / audit</td></tr>
       </tbody>
     </table>
+
+    <div class="box memo"><div class="t">🧠 Règle d'or</div>
+    <strong>Combiner plusieurs niveaux</strong> est généralement préférable. Ex : devs → TU/TIC · équipe test → TS/TIS · métier → TA. <br>
+    L'indépendance <strong>ne remplace pas la proximité</strong> : les devs trouvent aussi efficacement des défauts dans leur propre code.</div>
+
+    <h4>Avantages ✅ vs Inconvénients ❌</h4>
     <table>
-      <thead><tr><th>Avantages ✅</th><th>Inconvénients ❌</th></tr></thead>
+      <thead><tr><th>Avantages</th><th>Inconvénients</th></tr></thead>
       <tbody>
-        <tr><td>Autres perspectives → autres défauts</td><td>Isolement, manque de collaboration</td></tr>
-        <tr><td>Conteste les hypothèses</td><td>Devs perdent le sens qualité</td></tr>
-        <tr><td>—</td><td>Goulot d'étranglement / bouc émissaire des retards</td></tr>
+        <tr><td>Repèrent <strong>d'autres types</strong> de défauts (perspectives & biais différents)</td><td>Risque d'<strong>isolement</strong> de l'équipe de dev</td></tr>
+        <tr><td><strong>Contestent / vérifient</strong> les hypothèses des parties prenantes</td><td>Manque de collaboration, problèmes de communication</td></tr>
+        <tr><td>—</td><td>Devs peuvent perdre le <strong>sens des responsabilités</strong> qualité</td></tr>
+        <tr><td>—</td><td>Testeurs vus comme <strong>goulot d'étranglement</strong> / boucs émissaires des retards</td></tr>
       </tbody>
     </table>
-    <div class="box memo">L'indépendance <strong>ne remplace pas la proximité</strong> : les devs trouvent aussi efficacement des défauts dans leur code.</div>
+
+    <div class="box piege"><div class="t">⚠️ Piège examen</div>
+    « L'indépendance du test est <strong>toujours</strong> meilleure » → <strong>FAUX</strong>. L'indépendance a un coût et des inconvénients. Le niveau idéal <strong>dépend du contexte</strong> (criticité sécurité, etc.).</div>
   </section>
 
   <!-- PAGER INTER-CHAPITRES -->
