@@ -241,6 +241,14 @@
         <tr><td>Mesure qualité <strong>sans exécution</strong> (maintenabilité)</td><td>Mesure qualité <strong>avec exécution</strong> (performance)</td></tr>
       </tbody>
     </table>
+
+    <div class="box piege"><div class="t">⚠️ PIÈGE ULTIME — Statique = Défauts / Dynamique = Défaillances</div>
+    <strong>Règle d'or :</strong> Dès que tu vois « test statique » + « défaillance » dans la même phrase → c'est <strong>TOUJOURS FAUX</strong>.<br>
+    Le test statique ne fait pas tourner le code, il ne peut donc <strong>JAMAIS</strong> provoquer de défaillance. Il trouve des <strong>DÉFAUTS</strong> (code inaccessible, code mort).<br><br>
+    <strong>Aussi (question type examen) :</strong> « Quel défaut est trouvé par le statique mais PAS par le dynamique ? »<br>
+    ✅ <strong>BONNE RÉPONSE :</strong> Le <strong>code inaccessible</strong> (jamais exécuté = invisible pour le dynamique).<br>
+    ❌ « Temps de réponse », « utilisabilité » → nécessitent l'exécution (dynamique).<br>
+    ❌ « Exigence non implémentée » → c'est la <strong>faiblesse</strong> du statique (il ne voit que ce qui est écrit).</div>
     <div class="box memo">Ils sont <strong>complémentaires</strong>. Certains défauts ne se trouvent QUE par l'un ou l'autre.</div>
 
     <h4>Défauts typiques plus faciles à trouver en statique</h4>
@@ -282,6 +290,15 @@
     </table>
     <div class="box memo"><div class="t">🧠 À retenir</div>
     Une <strong>anomalie n'est pas forcément un défaut</strong> : elle doit être analysée/discutée avant décision.</div>
+
+    <div class="box piege"><div class="t">⚠️ PIÈGE — Associer les tâches aux activités (question type examen)</div>
+    <strong>Règle d'or :</strong> Utilise l'ordre chronologique pour associer les tâches.<br>
+    1. <strong>Planification</strong> = définir (périmètre, critères)<br>
+    2. <strong>Lancement</strong> = accès & rôles (prêt à démarrer)<br>
+    3. <strong>Revue individuelle</strong> = chacun cherche les anomalies (seul)<br>
+    4. <strong>Communication</strong> = on en discute (réunion)<br>
+    5. <strong>Correction</strong> = rapport & suivi<br><br>
+    <strong>QCM piège :</strong> Ne confonds pas « tout le monde a accès au produit » (Lancement) et « identifier les anomalies » (Revue individuelle). Avoir accès ≠ relire seul. Mnémo : <em>Prépare → Lance → Relis → Discute → Corrige</em>.</div>
 
     <h3>FL-3.2.3 — Rôles & responsabilités (K1)</h3>
     <div class="roles">

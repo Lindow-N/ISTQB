@@ -248,6 +248,12 @@
     → <strong>3 cas de test minimum</strong> (1 par partition) : ex. 10, 30, 80.</div>
     <div class="box memo"><strong>Couverture Each Choice</strong> (multi-paramètres) : chaque partition de chaque ensemble doit être exercée au moins une fois. <strong>Ne prend pas en compte les combinaisons</strong>.</div>
 
+    <div class="box piege"><div class="t">⚠️ PIÈGE — Partitions multiples qui se chevauchent (10 vs 20)</div>
+    <strong>QCM piège :</strong> « Pour chaque 10ème lavage → 10%. Pour chaque 20ème lavage → 50%. Quel ensemble couvre le mieux les partitions ? »<br>
+    ✅ <strong>BONNE RÉPONSE :</strong> <code>19, 20, 30</code> (couvre 3 partitions : normal, multiple de 20, multiple de 10 seul).<br>
+    ❌ <code>1, 10, 50</code> (le 50 est un doublon : 50÷20 = 2,5 → pas un multiple de 20 !).<br><br>
+    <strong>Règle :</strong> Un multiple de 20 (20, 40, 60...) est AUSSI multiple de 10. Mais un multiple de 10 (10, 30, 50...) n'est PAS forcément multiple de 20. Vérifie avec la division !</div>
+
     <h3>FL-4.2.2 — Analyse des valeurs limites (K3)</h3>
     <p>Base sur l'exercice des <strong>limites des partitions</strong> (où les devs font le plus d'erreurs). <strong>Uniquement pour partitions ordonnées</strong>.</p>
     <table>
