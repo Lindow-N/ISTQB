@@ -260,9 +260,9 @@
     <div class="box piege"><div class="t">⚠️ Piège classique</div>
     3 valeurs est <strong>plus rigoureuse</strong> que 2 valeurs. Ex : si « si (x ≤ 10) » est mal codé « si (x = 10) », la 2-valeurs (x=10, x=11) <strong>ne détecte pas</strong> le défaut, mais la 3-valeurs (x=9) <strong>le détecte</strong>.</div>
     <div class="box exemple"><div class="t">✏️ Exemple K3 — Champ 18–65 ans</div>
-    <strong>2 valeurs :</strong> 17, 18, 65, 66 → <strong>4 cas</strong><br>
-    <strong>3 valeurs :</strong> 16, 17, 18, 64, 65, 66 → <strong>6 cas</strong><br>
-    <em>(les bornes + leurs voisines de chaque côté)</em></div>
+    <strong>2 valeurs :</strong> 17, 18, 65, 66 → <strong>4 cas</strong> (les bornes + 1 voisine de la partition adjacente)<br>
+    <strong>3 valeurs :</strong> 17, 18, 19, 64, 65, 66 → <strong>6 cas</strong> (les bornes + 2 voisines, une de chaque côté)<br>
+    <em>Détail 3 valeurs :</em> Borne 18 → 17 (invalide), 18, 19 (valide) · Borne 65 → 64 (valide), 65, 66 (invalide)</div>
 
     <h3>FL-4.2.3 — Test par tables de décisions (K3)</h3>
     <p>Teste comment les <strong>combinaisons de conditions</strong> aboutissent à des résultats différents. Efficace pour enregistrer une logique complexe (règles de gestion).</p>
